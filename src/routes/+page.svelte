@@ -1,8 +1,10 @@
 <script lang="ts">
+    import {onMount} from "svelte";
     import "../app.css";
     import  jsPDF  from "jspdf"; 
     let wordCount : number = 0;
     const doc : any = new jsPDF();
+    let windowWidth : number = 100000;
     const pdf = () => {
         doc.text("Hello World!", 10, 10);
         doc.save("test.pdf");
@@ -42,25 +44,28 @@
         }
         
     }
+
 </script>
 
+<svelte:window bind:innerWidth={windowWidth}/>
+
 <div class="bg-blue-1000 py-2.5 px-[40px] inline-block fixed overflow-hidden rounded-3xl top-4 left-4 shadow-in z-10">
-    <h3>Document Title</h3>
+    <h3>Demerit Slip</h3>
 </div>
 
 <div class="h-auto w-auto bg-blue-1000 py-1.5 px-2.5 inline-block overflow-hidden rounded-3xl fixed right-4 top-4 shadow-in z-10">
 
     <div class="float-right clear-left inline-block">
-        {#each ["preview", "margins", "pdf", "print"] as button, i}
-        <button on:click={()=>{eval(button + "()")}} class="px-4 {i == 0 ? 'mr-1' : ""} {i == 3 ? "ml-1" : ""} {i != 0 && i != 3 ? 'mx-1' : ""} py-1 rounded-3xl hover:bg-blue-900">{button}</button>
+        {#each ["preview", "pdf", "print"] as button, i}
+        <button on:click={()=>{eval(button + "()")}} class="px-4 {i == 0 ? 'mr-1' : ""} {i == 3 ? "ml-1" : ""} {i != 0 && i != 3 ? 'mx-1' : ""} py-1 rounded-3xl hover:bg-blue-900 hover:text-white">{button}</button>
         {/each}
     </div>
 
 </div>
 
-<div class="h-[auto] w-[auto] overflow-x-hidden">
-    <div class="w-[856px] h-[1096px] flex items-center justify-center mx-auto my-[100px]">
-        <div class="w-[816px] h-[1056px] bg-white absolute text-">
+<div class="h-[100vh] w-auto overflow-x-hidden flex items-center justify-center">
+    <div style="{windowWidth <= (856 + 32) ? "transform:scale(" + windowWidth / (856 + 32) + "); margin-top:" + (0.8 * 500 * windowWidth / (856 + 32)) + "px;" : ""}" class="w-[856px] h-[1096px] mt-[500px] flex items-center justify-center relative">
+        <div  class="w-[816px] h-[1056px] bg-white">
 
             <div class="w-100 h-auto py-[10px] mx-[96px] mb-4 mt-[5em] border-b-2 border-black flex flex-row justify-content no-wrap">
 
