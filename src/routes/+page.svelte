@@ -112,7 +112,7 @@
         {/each}
     </div>
 
-    <div class="hidden menu:block menu:w-[42px] menu:h-[42px] overflow-y-hidden"on:click={()=>{
+    <div role="menu" tabindex="0" on:keydown={()=>{}} class="hidden menu:block menu:w-[42px] menu:h-[42px] overflow-y-hidden" on:click={()=>{
         if(!button) {
             mlMenu = "ml-[20%]"; 
             button = true;
@@ -153,7 +153,7 @@
                 for <span data-name="a/an" on:focus={(e)=>{clearText(e)}} on:blur={(e)=>{blurCheck(e);}} class={contSymbol} contenteditable={cont}>a/an (infraction)</span>. 
                 <span data-name="who" class={contSymbol} on:focus={(e)=>{clearText(e)}} on:blur={(e)=>{blurCheck(e);}} contenteditable={cont}>(Who assigned you the demerit, if Capt. Spell out Captain)</span> 
                 assigned me this demerit report because 
-                <span data-name="elipsis" class={contSymbol} contenteditable={cont} on:focus={(e)=>{clearText(e)}} on:blur={(e)=>{blurCheck(e);}} on:keydown={(e)=>{typeCheck(e)}}>...</span> 
+                <span role="textbox" tabindex="-1" data-name="elipsis" class={contSymbol} contenteditable={cont} on:focus={(e)=>{clearText(e)}} on:blur={(e)=>{blurCheck(e);}} on:keydown={(e)=>{typeCheck(e)}}>...</span> 
                 <span>{#if cont} {wordCount} / 100 {/if}</span>
             </p>
 
