@@ -5,11 +5,12 @@
     import  jsPDF  from "jspdf"; 
     let wordCount : number = 0;
     const doc : any = new jsPDF();
+
+    //This is used for binding the window width
     let windowWidth : number = 100000;
-    interface AssociativeArray {
-        [key: string]: string;
-    };
-    let defaultText : AssociativeArray[] = [];
+
+    //Associative array
+    let defaultText : {[key: string]: string} = {};
     defaultText["#"] = "(#)";
     defaultText["time"] = "(time)";
     defaultText["a/an"] = "(a/an infraction)";
@@ -18,12 +19,19 @@
     defaultText["name"] = "your name here";
     defaultText["date"] = "date of demerit";
     defaultText["hr"] = "1234"
+
+    //Open close menu
     let mlMenu : string = "ml-[40%]";
     let button : boolean = false;
+
+    //THis will return the pdf
     const pdf = () => {
         doc.text("Hello World!", 10, 10);
         doc.save("test.pdf");
     }
+
+    let previewOpen : boolean = false;
+
     const blurCheck = (e : any) => {
         let target = e as HTMLElement;
         //console.log(e.target.getAttribute("data-name"));
@@ -50,14 +58,22 @@
     let state : number = 0;
 
     const preview = () => {
-        if(state == 0) {
-            cont = false;
-            contSymbol = "";
-            state = 1;
+        if(windowWidth >= 856) {
+            if(state == 0) {
+                cont = false;
+                contSymbol = "";
+                state = 1;
+            } else {
+                cont = true;
+                contSymbol = "rounded-sm border border-black px-[5px] outline-0";
+                state = 0;
+            }
         } else {
-            cont = true;
-            contSymbol = "rounded-sm border border-black px-[5px] outline-0";
-            state = 0;
+            if(!previewOpen) {
+                previewOpen = true;
+            } else {
+                previewOpen = false;
+            }
         }
         
     }
@@ -65,6 +81,14 @@
 </script>
 
 <svelte:window bind:innerWidth={windowWidth}/>
+
+{#if previewOpen && windowWidth < 856}
+<div class="absolute w-[100vw] h-[100vh] top-0 left-0 z-50 overflow-y-scroll bg-gray-100">
+    <div style="{windowWidth < 856 ? "transform:scale(" + (windowWidth / 856) + ");" : "margin:auto;"}" class="w-[856px] h-[1096px] flex items-center jusitfy-content mt-15">
+        <div class="w-[816px] h-[1056px] bg-white mx-auto"></div>
+    </div>
+</div>
+{/if}
 
 <div>
     {#if button}
