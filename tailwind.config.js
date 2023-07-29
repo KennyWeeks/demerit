@@ -3,6 +3,10 @@ export default {
   content: ["./src/**/*.{html,svelte,js,ts}"],
   theme: {
     extend: {
+      screens: {
+        paper: {"max": "856px"},
+        menu: {"max": "500px"}
+      },
       width:{
         'margin': "624px"
       },
