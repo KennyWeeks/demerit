@@ -6,6 +6,8 @@
     let wordCount : number = 0;
     const doc : any = new jsPDF();
 
+    let darkTheme : boolean = false;
+
     //This is used for binding the window width
     let windowWidth : number = 100000;
 
@@ -69,7 +71,8 @@
     }
 
     let cont : boolean = true;
-    let contSymbol : string = "rounded-sm border border-black px-[5px] outline-0"
+    let color : string = "black";
+    let contSymbol : string = `rounded-sm border border-black px-[5px] outline-0`
     let state : number = 0;
 
     const preview = () => {
@@ -80,7 +83,7 @@
                 state = 1;
             } else {
                 cont = true;
-                contSymbol = "rounded-sm border border-black px-[5px] outline-0";
+                contSymbol = `rounded-sm border border-black px-[5px] outline-0`;
                 state = 0;
             }
         } else {
@@ -93,6 +96,19 @@
             }
         }
         
+    }
+
+    let lightModeTrigger : string = "right-[2.5px]";
+    let lightDark : string = "bg-white text-black";
+
+    $: {
+        if(windowWidth >= 500) {
+            lightDark = "bg-white text-black";
+            color = "black";
+            contSymbol = `rounded-sm border border-black px-[5px] outline-0`;
+            button = false;
+            previewOpen = false;
+        }
     }
 
 </script>
@@ -156,12 +172,29 @@
         {#each ["preview", "pdf", "print"] as button, i}
         <button on:click={()=>{eval(button + "()")}} class="paper:mx-0 py-1 rounded-3xl bg-blue-900 text-white block paper:w-[90px] mb-[5px] text-center">{button}</button>
         {/each}
+        <div class="rounded-3xl bg-blue-900 text-white">
+            <div role="menuitem" tabindex="-2" on:click={()=>{
+                if(lightModeTrigger == "right-[2.5px]") {
+                    lightModeTrigger = "left-[2.5px]";
+                    lightDark = "bg-black text-white";
+                    contSymbol = `rounded-sm border border-white px-[5px] outline-0`;
+                    color = "white";
+                } else {
+                    lightModeTrigger = "right-[2.5px]";
+                    lightDark = "bg-white text-black";
+                    contSymbol = `rounded-sm border border-black px-[5px] outline-0`;
+                    color = "black";
+                }
+            }} on:keydown={()=>{}} class="rounded-3xl bg-blue-900 w-[60px] h-[30px] float-right overflow-hidden relative">
+                <div class="w-[25px] h-[25px] bg-blue-1000 rounded-3xl absolute top-[2.5px] {lightModeTrigger}"></div>
+            </div>
+        </div>
     </Modal>
     {/if}
 </div>
 
 <div class="bg-blue-1000 py-2.5 px-[40px] inline-block fixed overflow-hidden rounded-3xl top-4 left-4 shadow-in z-10">
-    <h3>Demerit Slip</h3>
+    <h3 class="text-blue-900">Demerit Slip</h3>
 </div>
 
 <div class="h-auto w-auto bg-blue-1000 py-1.5 px-2.5 menu:p-0 inline-block overflow-hidden rounded-3xl fixed right-4 top-4 shadow-in z-50">
@@ -181,8 +214,8 @@
             button = false;
         }
     }}>
-        <div class="w-[60%] h-[6px] bg-black rounded-xl ml-[20%] mt-[12px]"></div>
-        <div class="w-[40%] h-[6px] bg-black rounded-xl {mlMenu} mt-[5px]"></div>
+        <div class="w-[60%] h-[6px] bg-blue-900 rounded-xl ml-[20%] mt-[12px]"></div>
+        <div class="w-[40%] h-[6px] bg-blue-900 rounded-xl {mlMenu} mt-[5px]"></div>
     </div>
 
 
@@ -191,11 +224,11 @@
 <div class="h-[100vh] w-auto overflow-x-hidden flex items-center justify-center">
 
     <div class="w-[856px] h-[1096px] mt-[500px] paper:mt-[0px] paper:h-auto flex items-center justify-center relative">
-        <div  class="w-[816px] h-[1056px] paper:w-[100vw] paper:h-[100vh] bg-white">
+        <div  class="w-[816px] h-[1056px] paper:w-[100vw] paper:h-[100vh] {lightDark}">
 
             <img src="demerit_logo.png" width={816 - (96*2)} class="ml-[96px] mt-[52px] paper:hidden" alt="demerit_title"/>
 
-            <div class="w-100 paper:w-auto paper:ml-[10%] paper:inline-block h-auto py-[10px] mx-[96px] paper:mx-auto mb-4 mt-[1em] paper:mt-[5em] border-b-2 border-black flex flex-row justify-content no-wrap">
+            <div class="w-100 paper:w-auto paper:ml-[10%] paper:inline-block h-auto py-[10px] mx-[96px] paper:mx-auto mb-4 mt-[1em] paper:mt-[5em] border-b-2 border-{color} flex flex-row justify-content no-wrap">
 
                 {#each [["text-lg grow-[2]", "Name: ", "your name here", "name"], 
                 ["text-lg grow-[1]", "Date: ", "date of demerit", "date"],
