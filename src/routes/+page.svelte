@@ -52,6 +52,9 @@
             console.log("Can't leave this empty");
             e.target.innerHTML = defaultText[e.target.getAttribute("data-name")];
             outputText[e.target.getAttribute("data-name")] = defaultText[e.target.getAttribute("data-name")];
+            if(e.target.getAttribute("data-name") == 'elipsis') {
+                wordCount = 0;
+            }
         } else {
             let attr : string = e.target.getAttribute("data-name");
             outputText[attr] = e.target.innerText;
@@ -65,9 +68,16 @@
 
     const typeCheck = (e : any) => {
         let target = e as HTMLElement;
-        let example : string[] = e.target.innerText.split(/\s+/);
-        example = example.filter(word => word != '');
-        wordCount = example.length;
+        if(wordCount != 100) {
+            if(e.keyCode == 8) {
+                console.log(e.target.innerText.split(/\s+/));
+            }
+            let example : string[] = e.target.innerText.split(/\s+/);
+            example = example.filter(word => word != '');
+            wordCount = example.length;
+        } else {
+            e.preventDefault();
+        }
     }
 
     let cont : boolean = true;
@@ -98,9 +108,36 @@
         
     }
 
+    let keyCombo : boolean = false;
+
+    //This will be some keypress formatting for the different parts of the contendible data
+    const numberFormat = (e: any) => {
+        if(e.keyCode == 224 || e.keyCode == 17) {
+            keyCombo = true;
+        }
+
+        if(keyCombo) {
+            if(e.keyCode != 65) {
+                e.preventDefault;
+            }
+        } else {
+            if((e.keyCode < 48 || e.keyCode > 57) && e.keyCode != 8) {
+                e.preventDefault();
+            }
+        }
+    }
+
+    const checkBackSpace = (e:any) => {
+       if(e.innerText.length == 0) {
+        wordCount = 0;
+       }
+    }
+
     let lightModeTrigger : string = "right-[2.5px]";
     let lightDark : string = "bg-white text-black";
+    
 
+    //Reactive Styling
     $: {
         if(windowWidth >= 500) {
             lightDark = "bg-white text-black";
@@ -201,7 +238,7 @@
 
     <div class="float-right clear-left inline-block menu:hidden">
         {#each ["preview", "pdf", "print"] as button, i}
-        <button on:click={()=>{eval(button + "()")}} class="px-4 {i == 0 ? 'mr-1' : ""} {i == 3 ? "ml-1" : ""} {i != 0 && i != 3 ? 'mx-1' : ""} py-1 rounded-3xl hover:bg-blue-900 hover:text-white">{button}</button>
+        <button  on:click={()=>{eval(button + "()")}} class="px-4 {i == 0 ? 'mr-1' : ""} {i == 3 ? "ml-1" : ""} {i != 0 && i != 3 ? 'mx-1' : ""} py-1 rounded-3xl text-blue-900 hover:bg-blue-900 hover:text-blue-1000">{button}</button>
         {/each}
     </div>
 
@@ -226,7 +263,7 @@
     <div class="w-[856px] h-[1096px] mt-[500px] paper:mt-[0px] paper:h-auto flex items-center justify-center relative">
         <div  class="w-[816px] h-[1056px] paper:w-[100vw] paper:h-[100vh] {lightDark}">
 
-            <img src="demerit_logo.png" width={816 - (96*2)} class="ml-[96px] mt-[52px] paper:hidden" alt="demerit_title"/>
+            <img src="demerit_logo.png" width={816 - (96*2)} class="ml-[105px] mt-[52px] paper:hidden" alt="demerit_title"/>
 
             <div class="w-100 paper:w-auto paper:ml-[10%] paper:inline-block h-auto py-[10px] mx-[96px] paper:mx-auto mb-4 mt-[1em] paper:mt-[5em] border-b-2 border-{color} flex flex-row justify-content no-wrap">
 
@@ -234,7 +271,15 @@
                 ["text-lg grow-[1]", "Date: ", "date of demerit", "date"],
                 ["text-lg grow-[1]", "Hr #: ", "1234", "hr"]] as data, i}
 
-                    <div class={data[0]}><span class="font-bold">{data[1]}</span> <span on:focus={(e)=>{clearText(e)}} on:blur={(e)=>{blurCheck(e);}} data-name={data[3]} class="{contSymbol}" contenteditable={cont}>{data[2]}</span></div>
+                    <div class={data[0]}><span class="font-bold">{data[1]}</span> <span
+                            role="contentinfo"
+                            on:keydown={(e)=>{
+                                if(i == 2) {
+                                    numberFormat(e);
+                                }
+                            }} on:keyup={(e)=>{
+                                keyCombo = false;
+                            }} on:focus={(e)=>{clearText(e)}} on:blur={(e)=>{blurCheck(e);}} data-name={data[3]} class="{contSymbol} {i == 0 ? "capitalize" : ""}" contenteditable={cont}>{data[2]}</span></div>
 
                 {/each}
             </div>
@@ -242,13 +287,21 @@
             <h3 class="ml-[96px] paper:ml-[10%] text-lg font-bold uppercase mb-1.5">Infraction: </h3>
 
             <p class="mx-[96px] paper:w-[80%] paper:mx-auto">I earned 
-                <span data-name="#" on:focus={(e)=>{clearText(e)}} on:blur={(e)=>{blurCheck(e);}} class={contSymbol} contenteditable={cont}>(#)</span> 
+                <span role="contentinfo" data-name="#" on:focus={(e)=>{clearText(e)}} on:blur={(e)=>{blurCheck(e);}} class={contSymbol} contenteditable={cont} on:keydown={(e)=>{
+                    numberFormat(e);
+                }} on:keyup={(e)=>{
+                    keyCombo = false;
+                }}>(#)</span> 
                 demerit points at approximately 
                 <span data-name="time" on:focus={(e)=>{clearText(e)}} on:blur={(e)=>{blurCheck(e);}} class={contSymbol} contenteditable={cont}>(time)</span> 
                 for <span data-name="a/an" on:focus={(e)=>{clearText(e)}} on:blur={(e)=>{blurCheck(e);}} class={contSymbol} contenteditable={cont}>a/an (infraction)</span>. 
                 <span data-name="who" class={contSymbol} on:focus={(e)=>{clearText(e)}} on:blur={(e)=>{blurCheck(e);}} contenteditable={cont}>(Who assigned you the demerit, if Capt. Spell out Captain)</span> 
                 assigned me this demerit report because 
-                <span role="textbox" tabindex="-1" data-name="elipsis" class={contSymbol} contenteditable={cont} on:focus={(e)=>{clearText(e)}} on:blur={(e)=>{blurCheck(e);}} on:keydown={(e)=>{typeCheck(e)}}>...</span> 
+                <span role="textbox" tabindex="-1" data-name="elipsis" class={contSymbol} contenteditable={cont} on:focus={(e)=>{clearText(e)}} on:blur={(e)=>{blurCheck(e);}} on:keydown={(e)=>{typeCheck(e)}} on:keyup={(e)=>{
+                    if(e.keyCode == 8) {
+                        checkBackSpace(e.target);
+                    }
+                }}>...</span> 
                 <span>{#if cont} {wordCount} / 100 {/if}</span>
             </p>
 
