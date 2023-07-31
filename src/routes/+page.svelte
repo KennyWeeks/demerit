@@ -20,6 +20,17 @@
     defaultText["date"] = "date of demerit";
     defaultText["hr"] = "1234"
 
+    //These are the inner text binds
+    let outputText : {[key:string] : string} = {};
+    outputText["#"] = "(#)";
+    outputText["time"] = "(time)";
+    outputText["a/an"] = "(a/an infraction)";
+    outputText["who"] = "(Who assigned you the demerit, if Capt. Spell out Captain)";
+    outputText["elipsis"] = "...";
+    outputText["name"] = "your name here";
+    outputText["date"] = "date of demerit";
+    outputText["hr"] = "1234"
+
     //Open close menu
     let mlMenu : string = "ml-[40%]";
     let button : boolean = false;
@@ -38,6 +49,10 @@
         if(e.target.innerText.length == 0) {
             console.log("Can't leave this empty");
             e.target.innerHTML = defaultText[e.target.getAttribute("data-name")];
+            outputText[e.target.getAttribute("data-name")] = defaultText[e.target.getAttribute("data-name")];
+        } else {
+            let attr : string = e.target.getAttribute("data-name");
+            outputText[attr] = e.target.innerText;
         }
     }
 
@@ -71,8 +86,10 @@
         } else {
             if(!previewOpen) {
                 previewOpen = true;
+                button = false;
             } else {
                 previewOpen = false;
+                button = false;
             }
         }
         
@@ -83,9 +100,52 @@
 <svelte:window bind:innerWidth={windowWidth}/>
 
 {#if previewOpen && windowWidth < 856}
-<div class="absolute w-[100vw] h-[100vh] top-0 left-0 z-50 overflow-y-scroll bg-gray-100">
+<div class="absolute w-[100vw] h-[100vh] top-0 left-0 z-40 overflow-y-scroll bg-gray-100">
     <div style="{windowWidth < 856 ? "transform:scale(" + (windowWidth / 856) + ");" : "margin:auto;"}" class="w-[856px] h-[1096px] flex items-center jusitfy-content mt-15">
-        <div class="w-[816px] h-[1056px] bg-white mx-auto"></div>
+        <div class="w-[816px] h-[1056px] bg-white mx-auto">
+
+            <img src="demerit_logo.png" width={816 - (96*2)} class="ml-[96px] mt-[52px]" alt="demerit_title"/>
+
+            <div class="w-100 h-auto py-[10px] mx-[96px] mb-4 mt-[1em] border-b-2 border-black flex flex-row justify-content no-wrap">
+
+                {#each [["text-lg grow-[2]", "Name: ", "your name here", outputText["name"]], 
+                ["text-lg grow-[1]", "Date: ", "date of demerit", outputText["date"]],
+                ["text-lg grow-[1]", "Hr #: ", "1234", outputText["hr"]]] as data, i}
+
+                    <div class={data[0]}><span class="font-bold">{data[1]}</span> <span data-name={data[3]}>{data[3]}</span></div>
+
+                {/each}
+            </div>
+
+            <h3 class="ml-[96px] text-lg font-bold uppercase mb-1.5">Infraction: </h3>
+
+            <p class="mx-[96px]">I earned 
+                <span data-name="#">{outputText["#"]}</span> 
+                demerit points at approximately 
+                <span data-name="time">{outputText["time"]}</span> 
+                for <span data-name="a/an">{outputText["a/an"]}</span>. 
+                <span data-name="who">{outputText["who"]}</span> 
+                assigned me this demerit report because 
+                <span role="textbox" tabindex="-1" data-name="elipsis">{outputText["elipsis"]}</span>
+            </p>
+
+            <table class="w-margin h-[125px] absolute bottom-[96px] ml-[96px] border-collapse">
+                <colgroup>
+                    <col span="1" style="width: 2%;">
+                    <col span="1" style="width: 50%;">
+                    <col span="1" style="width: 24%;">
+                    <col span="1" style="width: 24%;">
+                 </colgroup>
+                 {#each Array(2) as _}
+                 <tr>
+                    {#each Array(4) as _}
+                        <td class="border border-black"></td>
+                    {/each}
+                 </tr>
+                 {/each}
+        
+            </table>
+        </div>
     </div>
 </div>
 {/if}
@@ -94,7 +154,7 @@
     {#if button}
     <Modal>
         {#each ["preview", "pdf", "print"] as button, i}
-        <button on:click={()=>{eval(button + "()")}} class="paper:mx-0 py-1 rounded-3xl bg-blue-900 text-white block paper:w-[90px] paper:{i == 2 ? "mb-0" : "mb-[5px]"} text-center">{button}</button>
+        <button on:click={()=>{eval(button + "()")}} class="paper:mx-0 py-1 rounded-3xl bg-blue-900 text-white block paper:w-[90px] mb-[5px] text-center">{button}</button>
         {/each}
     </Modal>
     {/if}
@@ -104,7 +164,7 @@
     <h3>Demerit Slip</h3>
 </div>
 
-<div class="h-auto w-auto bg-blue-1000 py-1.5 px-2.5 menu:p-0 inline-block overflow-hidden rounded-3xl fixed right-4 top-4 shadow-in z-10">
+<div class="h-auto w-auto bg-blue-1000 py-1.5 px-2.5 menu:p-0 inline-block overflow-hidden rounded-3xl fixed right-4 top-4 shadow-in z-50">
 
     <div class="float-right clear-left inline-block menu:hidden">
         {#each ["preview", "pdf", "print"] as button, i}
@@ -133,7 +193,9 @@
     <div class="w-[856px] h-[1096px] mt-[500px] paper:mt-[0px] paper:h-auto flex items-center justify-center relative">
         <div  class="w-[816px] h-[1056px] paper:w-[100vw] paper:h-[100vh] bg-white">
 
-            <div class="w-100 paper:w-auto paper:ml-[10%] paper:inline-block h-auto py-[10px] mx-[96px] paper:mx-auto mb-4 mt-[5em] border-b-2 border-black flex flex-row justify-content no-wrap">
+            <img src="demerit_logo.png" width={816 - (96*2)} class="ml-[96px] mt-[52px] paper:hidden" alt="demerit_title"/>
+
+            <div class="w-100 paper:w-auto paper:ml-[10%] paper:inline-block h-auto py-[10px] mx-[96px] paper:mx-auto mb-4 mt-[1em] paper:mt-[5em] border-b-2 border-black flex flex-row justify-content no-wrap">
 
                 {#each [["text-lg grow-[2]", "Name: ", "your name here", "name"], 
                 ["text-lg grow-[1]", "Date: ", "date of demerit", "date"],
@@ -171,6 +233,7 @@
                     {/each}
                  </tr>
                  {/each}
+            </table>
         
         </div>
 
