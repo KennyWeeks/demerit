@@ -5,6 +5,22 @@
     export let classData : string = "w-auto h-auto inline-block bg-blue-1000 fixed top-[70px] p-2 right-4 text-white z-50 text-center rounded-md shadow-in";
     export let date : string = "";
     export let time : string = "";
+    const timeFormat = (time:string, amPm:string) => {
+        let timeArray = time.split(" ");
+        time = "";
+        console.log(timeArray.length);
+        for(let i = 0; i < timeArray.length; i++) {
+            time += timeArray[i];
+            if(i == 0) {
+                time += " " + amPm;
+            }
+            if(timeArray[2] == '' || timeArray[2] == ' ') {
+                break;
+            }
+            time += " ";
+        }
+        return time;
+    };
 
     onMount(()=>{
         console.log(previousFocused);
@@ -29,33 +45,9 @@
                         let hours : string | number = time.substring(0, time.indexOf(":"));
                         hours = parseInt(hours) > 12 ? parseInt(hours) - 12 : hours; //This will subract 12 from the military time;
                         time = hours.toString() + time.slice(time.indexOf(":"));
-                        let timeArray = time.split(" ");
-                        time = "";
-                        for(let i = 0; i < timeArray.length; i++) {
-                            time += timeArray[i];
-                            if(i == 0) {
-                                time += " PM";
-                            }
-                            if(timeArray[2] == '' || timeArray[2] == ' ') {
-                                break;
-                            }
-                            time += " ";
-                        }
+                        time = timeFormat(time, "PM");
                     } else {
-                        console.log(time);
-                        let timeArray = time.split(" ");
-                        time = "";
-                        console.log(timeArray.length);
-                        for(let i = 0; i < timeArray.length; i++) {
-                            time += timeArray[i];
-                            if(i == 0) {
-                                time += " AM";
-                            }
-                            if(timeArray[2] == '' || timeArray[2] == ' ') {
-                                break;
-                            }
-                            time += " ";
-                        }
+                        time = timeFormat(time, "AM");  
                     }
                 } else {
                     time = time.split(" ")[2];
