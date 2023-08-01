@@ -151,14 +151,15 @@
     }
 
     let lightModeTrigger : string = "right-[2.5px]";
-    let lightDark : string = "bg-white text-black";
+    let lightDark : string = "bg-white text-black-200";
     
 
     //Reactive Styling
     $: {
         if(windowWidth >= 500) {
-            lightDark = "bg-white text-black";
+            lightDark = "bg-white text-black-200";
             color = "black";
+            lightModeTrigger = "right-[2.5px]";
             contSymbol = `rounded-sm border border-black px-[5px] outline-0`;
             button = false;
             previewOpen = false;
@@ -233,7 +234,7 @@
             <div role="menuitem" tabindex="-2" on:click={()=>{
                 if(lightModeTrigger == "right-[2.5px]") {
                     lightModeTrigger = "left-[2.5px]";
-                    lightDark = "bg-black text-white";
+                    lightDark = "bg-black-200 text-white";
                     contSymbol = `rounded-sm border border-white px-[5px] outline-0`;
                     color = "white";
                 } else {
