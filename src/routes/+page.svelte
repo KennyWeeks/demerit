@@ -6,7 +6,16 @@
     let wordCount : number = 0;
     const doc : any = new jsPDF();
 
-    let darkTheme : boolean = false;
+
+    //These variables will be used for the date
+    let dateModal : boolean = false;
+    let dateValue : string = "date of demerit";
+    let timeValue : string = "(time)";
+    let timeDate : string = "";
+    let on : string = "";
+    let timeStuff : boolean = false;
+    let nameValue : string = "you name here";
+    let hrValue : string = "1234";
 
     //This is used for binding the window width
     let windowWidth : number = 100000;
@@ -64,6 +73,14 @@
     const clearText = (e : any) => {
         let target = e as HTMLElement;
         e.target.innerHTML = "";
+        if(e.target.getAttribute("data-name") == "date" || e.target.getAttribute("data-name") == "time") {
+            dateModal = true;
+            if(e.target.getAttribute("data-name") == "time") {
+                timeStuff = true;
+            } else {
+                timeStuff = false;
+            }
+        }
     }
 
     const typeCheck = (e : any) => {
@@ -145,6 +162,9 @@
             contSymbol = `rounded-sm border border-black px-[5px] outline-0`;
             button = false;
             previewOpen = false;
+        };
+        if(timeDate != "") {
+            on = " on ";
         }
     }
 
@@ -230,6 +250,37 @@
     {/if}
 </div>
 
+{#if dateModal}
+    <div class="absolute w-[100vw] h-[100vh] bg-black-100 z-40 flex jusity-content items-center">
+
+        <Modal classData="inline-block mx-auto overflow-visible" date={dateValue} time={timeValue + on + timeDate}>
+            <div class="p-[20px] bg-blue-1000 rounded-md relative">
+
+                <div class="p-[15px] rounded-3xl bg-white absolute top-[-17.5px] right-[-17.5px]" role="button" tabindex="-3" on:keypress={()=>{}} on:click={()=>{
+                    dateModal = false;
+                }}></div>
+
+                <!--This will be some html formatting so that the date can be selected from a predefined set of data-->
+
+                {#if timeStuff}
+                    <label for="time">Pick a time</label>
+                    <input id="time" bind:value={timeValue} type="time"/>
+
+                    <p class="font-bold">on</p>
+ 
+                    <label for="tdate">Pick a date: </label>
+                    <input id="tdate" bind:value={timeDate} type="date"/>
+                {:else}
+                    <label for="date">Pick a date: </label>
+                    <input id="date" bind:value={dateValue} type="date"/>
+                {/if}
+
+            </div>
+        </Modal>
+
+    </div>
+{/if}
+
 <div class="bg-blue-1000 py-2.5 px-[40px] inline-block fixed overflow-hidden rounded-3xl top-4 left-4 shadow-in z-10">
     <h3 class="text-blue-900">Demerit Slip</h3>
 </div>
@@ -267,11 +318,13 @@
 
             <div class="w-100 paper:w-auto paper:ml-[10%] paper:inline-block h-auto py-[10px] mx-[96px] paper:mx-auto mb-4 mt-[1em] paper:mt-[5em] border-b-2 border-{color} flex flex-row justify-content no-wrap">
 
-                {#each [["text-lg grow-[2]", "Name: ", "your name here", "name"], 
-                ["text-lg grow-[1]", "Date: ", "date of demerit", "date"],
-                ["text-lg grow-[1]", "Hr #: ", "1234", "hr"]] as data, i}
+                {#each [["text-lg grow-[2]", "Name: ", nameValue, "name"], 
+                ["text-lg grow-[1]", "Date: ", dateValue, "date"],
+                ["text-lg grow-[1]", "Hr #: ", hrValue, "hr"]] as data, i}
 
-                    <div class={data[0]}><span class="font-bold">{data[1]}</span> <span
+                    <div class={data[0]}>
+                        <span class="font-bold">{data[1]}</span>
+                        <span
                             role="contentinfo"
                             on:keydown={(e)=>{
                                 if(i == 2) {
@@ -279,7 +332,11 @@
                                 }
                             }} on:keyup={(e)=>{
                                 keyCombo = false;
-                            }} on:focus={(e)=>{clearText(e)}} on:blur={(e)=>{blurCheck(e);}} data-name={data[3]} class="{contSymbol} {i == 0 ? "capitalize" : ""}" contenteditable={cont}>{data[2]}</span></div>
+                            }} on:focus={(e)=>{clearText(e)}} on:blur={(e)=>{
+                                if(i != 1) {blurCheck(e);}}} data-name={data[3]} class="{contSymbol} {i == 0 ? "capitalize" : ""}" contenteditable={cont}>
+                                {data[2]}
+                        </span>
+                    </div>
 
                 {/each}
             </div>
@@ -293,7 +350,7 @@
                     keyCombo = false;
                 }}>(#)</span> 
                 demerit points at approximately 
-                <span data-name="time" on:focus={(e)=>{clearText(e)}} on:blur={(e)=>{blurCheck(e);}} class={contSymbol} contenteditable={cont}>(time)</span> 
+                <span data-name="time" on:focus={(e)=>{clearText(e)}} class={contSymbol} contenteditable={cont}>{timeValue}</span>
                 for <span data-name="a/an" on:focus={(e)=>{clearText(e)}} on:blur={(e)=>{blurCheck(e);}} class={contSymbol} contenteditable={cont}>a/an (infraction)</span>. 
                 <span data-name="who" class={contSymbol} on:focus={(e)=>{clearText(e)}} on:blur={(e)=>{blurCheck(e);}} contenteditable={cont}>(Who assigned you the demerit, if Capt. Spell out Captain)</span> 
                 assigned me this demerit report because 
