@@ -5,6 +5,7 @@
     export let classData : string = "w-auto h-auto inline-block bg-blue-1000 fixed top-[70px] p-2 right-4 text-white z-50 text-center rounded-md shadow-in";
     export let date : string = "";
     export let time : string = "";
+    export let finalTime : string = "";
     const timeFormat = (time:string, amPm:string) => {
         let timeArray = time.split(" ");
         time = "";
@@ -53,6 +54,7 @@
                     time = time.split(" ")[2];
                 }
                 pf.innerText = time;
+                finalTime = time;
             }
         });
     }
