@@ -159,9 +159,11 @@
         <Modal classData="inline-block mx-auto overflow-visible" bind:finalTime={finalTime} date={dateValue} bind:time={totalTime}>
             <div class="p-[20px] bg-blue-1000 rounded-md relative">
 
-                <div class="p-[15px] rounded-3xl bg-white absolute top-[-17.5px] right-[-17.5px]" role="button" tabindex="-3" on:keypress={()=>{}} on:click={()=>{
+                <div class="p-[7.5px] rounded-3xl bg-white absolute top-[-35px] right-0" role="button" tabindex="-3" on:keypress={()=>{}} on:click={()=>{
                     dateModal = false;
-                }}></div>
+                }}>
+                    <img src="close.png" width="15" alt="close-icon"/>
+                </div>
 
                 <!--This will be some html formatting so that the date can be selected from a predefined set of data-->
 
@@ -188,9 +190,11 @@
     <div class="absolute w-[100vw] h-[100vh] bg-black-100 z-40 flex jusity-content items-center">
         <Modal classData="inline-block mx-auto overflow-visible">
             <div class="p-[20px] bg-blue-1000 rounded-md relative">
-                <div class="p-[15px] rounded-3xl bg-white absolute top-[-17.5px] right-[-17.5px]" role="button" tabindex="-3" on:keypress={()=>{}} on:click={()=>{
+                <div class="p-[7.5px] rounded-3xl bg-white absolute top-[-35px] right-0" role="button" tabindex="-3" on:keypress={()=>{}} on:click={()=>{
                     openModal = false;
-                }}></div>
+                }}>
+                    <img src="close.png" width="15" alt="close-icon"/>    
+                </div>
                 
                 <!--This is the view box, like the final preview-->
                 <div class="w-[80vw] h-[25em] bg-white shadow">
