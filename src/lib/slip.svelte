@@ -10,6 +10,8 @@
     export let mobileDisplay : boolean = false;
     export let windowWidth : number = 0;
 
+    let tableContent : Array<Array<string>> = [["", "Recruit Signature", "HR #", "Date"], ["", "Academy Staff Signature", "HR #", "Date"]];
+
     //These are the default values in the page
     let defaultText : {[key: string]: string} = {};
     export let outputText : {[key: string]: string} = {};
@@ -196,17 +198,19 @@
             <span>{#if cont} {wordCount} / 100 {/if}</span>
         </p>
 
-        <table class="w-margin h-[125px] absolute bottom-[96px] ml-[96px] border-collapse paper:hidden">
+        <table class="w-margin h-[125px] absolute bottom-[96px] ml-[96px] border-collapse {!mobileDisplay ? "paper:hidden": ''}">
             <colgroup>
                 <col span="1" style="width: 2%;">
                 <col span="1" style="width: 50%;">
                 <col span="1" style="width: 24%;">
                 <col span="1" style="width: 24%;">
              </colgroup>
-             {#each Array(2) as _}
+             {#each Array(2) as _, index}
              <tr>
-                {#each Array(4) as _}
-                    <td class="border border-black"></td>
+                {#each Array(4) as _, index2}
+                    <td class="border border-black h-[20px] relative">
+                        <i class="absolute top-[2px] left-[10px]">{tableContent[index][index2]}</i>
+                    </td>
                 {/each}
              </tr>
              {/each}

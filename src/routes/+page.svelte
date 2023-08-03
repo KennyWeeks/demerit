@@ -36,10 +36,19 @@
     let mlMenu : string = "ml-[40%]";
     let button : boolean = false;
 
+    //Save modal info
+    let openModal : boolean = false;
+    let pdfName : string = "Demerit Slip";
+
+
     //THis will return the pdf
     const pdf = () => {
-        doc.text("Hello World!", 10, 10);
-        doc.save("test.pdf");
+        //So this will make a modal pop up, and that's what I want to work with
+        if(openModal) {
+            openModal = false;
+        } else {
+            openModal = true;
+        }
     }
 
     let previewOpen : boolean = false;
@@ -172,6 +181,37 @@
             </div>
         </Modal>
 
+    </div>
+{/if}
+
+{#if openModal}
+    <div class="absolute w-[100vw] h-[100vh] bg-black-100 z-40 flex jusity-content items-center">
+        <Modal classData="inline-block mx-auto overflow-visible">
+            <div class="p-[20px] bg-blue-1000 rounded-md relative">
+                <div class="p-[15px] rounded-3xl bg-white absolute top-[-17.5px] right-[-17.5px]" role="button" tabindex="-3" on:keypress={()=>{}} on:click={()=>{
+                    openModal = false;
+                }}></div>
+                
+                <!--This is the view box, like the final preview-->
+                <div class="w-[80vw] h-[25em] bg-white shadow">
+
+                </div>
+
+                <hr class="my-[10px] bg-blue-900 h-[2px]">
+
+                <!--This will be the main body of the save, where the user will define the name, and ultimately save the content-->
+                <div>
+
+                    <label class="text-blue-900" for="save-name">Save file name under - </label>
+                    <br>
+                    <input class="border-2 border-blue-900 mt-[5px] pl-[5px]" type="text" name="save-name" placeholder="{pdfName}" bind:value={pdfName} on:focus={()=>{pdfName = ""}}/>
+                    <br>
+                    <button class="bg-blue-900 text-blue-1000 py-[5px] px-[15px] rounded-3xl mt-[10px]">save</button>
+
+                </div>
+
+            </div>
+        </Modal>
     </div>
 {/if}
 
