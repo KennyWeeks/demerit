@@ -23,6 +23,8 @@
     let timeStuff : boolean;
     let timeValue : string;
     let totalTime : string; //THis is the total time after it has been editted.
+    let lightIcon : string = "dark.png";
+    let width : number = 11;
 
     //These variables will be used for the date    
     
@@ -139,14 +141,20 @@
                     lightDark = "bg-black-200 text-white";
                     contSymbol = `rounded-sm border border-white px-[5px] outline-0`;
                     color = "white";
+                    lightIcon = "light.png";
+                    width = 20;
                 } else {
                     lightModeTrigger = "right-[2.5px]";
                     lightDark = "bg-white text-black";
                     contSymbol = `rounded-sm border border-black px-[5px] outline-0`;
                     color = "black";
+                    lightIcon = "dark.png"
+                    width = 11;
                 }
             }} on:keydown={()=>{}} class="rounded-3xl bg-blue-900 w-[60px] h-[30px] float-right overflow-hidden relative">
-                <div class="w-[25px] h-[25px] bg-blue-1000 rounded-3xl absolute top-[2.5px] {lightModeTrigger}"></div>
+                <div class="w-[25px] h-[25px] bg-blue-1000 rounded-3xl absolute top-[2.5px] {lightModeTrigger}">
+                <img src="{lightIcon}" class="mx-[auto] mt-[3px]" width="{width}" alt="light-dark-icon"/>
+                </div>
             </div>
         </div>
     </Modal>
