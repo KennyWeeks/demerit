@@ -13,6 +13,9 @@ export default {
       boxShadow: {
         'in': "inset 0 0 0 1px rgba(0, 0, 0, 0.3)"
       },
+      zIndex: {
+        100: 20000
+      },
       colors: {
         gray: {
           100: "#f2f2f2",

@@ -3,6 +3,7 @@
     import "../app.css";
     import Modal from "$lib/modal.svelte";
     import Slip from "$lib/slip.svelte";
+    import Menu from "$lib/menu.svelte";
     import  jsPDF  from "jspdf"; 
     
     //THis will create some default values for the output strings
@@ -14,8 +15,6 @@
 
 
     const doc : any = new jsPDF();
-
-    let previewText : string = "preview";
 
     //These will be some values I will bind to the page, mostly to display the date modal
     let dateModal : boolean;
@@ -33,10 +32,6 @@
 
     //This is used for binding the window width
     let windowWidth : number = 100000;
-
-    //Open-close menu options
-    let mlMenu : string = "ml-[40%]";
-    let button : boolean = false;
 
     //Save modal info
     let openModal : boolean = false;
@@ -60,28 +55,6 @@
     
     //This will set the state of the preview from the menu
     let state : number = 1;
-    const preview = () => {
-        if(windowWidth >= 856) {
-            if(state == 0) {
-                state = 1;
-                previewText = "preview";
-            } else {
-                state = 0;
-                previewText = "edit";
-            }
-        } else {
-            if(!previewOpen) {
-                previewOpen = true;
-                button = false;
-                previewText = "edit";
-            } else {
-                previewOpen = false;
-                button = false;
-                previewText = "preview";
-            }
-        }
-        
-    }
 
     //This will trigger the light and dark mode
     let lightModeTrigger : string = "right-[2.5px]";
@@ -90,6 +63,8 @@
     let contSymbol : string = "rounded-sm border border-black px-[5px] outline-0";
     let lightDark = "bg-white text-black-200";
     let finalTime : string;
+
+    let button : boolean = false;
     
 
     //Reactive Styling
@@ -101,6 +76,7 @@
             contSymbol = `rounded-sm border border-black px-[5px] outline-0`;
             button = false;
             previewOpen = false;
+            previewText = "preview";
         };
         if(timeDate != "") {
             on = " on ";
@@ -108,13 +84,15 @@
         totalTime = timeValue + on + timeDate;
     }
 
+    let previewText : string = "preview";
+
 </script>
 
 <!--Binding inner width here, created some reactive variables-->
 <svelte:window bind:innerWidth={windowWidth}/>
 
 {#if previewOpen && windowWidth < 856}
-<div class="absolute w-[100vw] h-[100vh] top-0 left-0 z-40 overflow-y-scroll bg-gray-100">
+<div class="absolute w-[100vw] h-[100vh] top-0 left-0 z-10 overflow-y-scroll bg-gray-100">
     <Slip mobileDisplay={windowWidth < 856 ? true : false} cont={false} contSymbol={""} outputText={outputText} timeValue={finalTime} windowWidth={windowWidth}/>
 </div>
 {/if}
@@ -123,19 +101,11 @@
 <div>
     {#if button}
     <Modal>
-        {#each ["preview", "pdf", "print"] as button, i}
-        <button on:click={()=>{eval(button + "()")}} class="paper:mx-0 py-1 rounded-3xl bg-blue-900 text-white block paper:w-[90px] mb-[5px] text-center">
-            {#if i == 0}
-                {previewText}
-            {:else}
-                {button}
-            {/if}
-            </button>
-        {/each}
-
+        <Menu mobileOptions={true} bind:previewOpen={previewOpen} bind:button={button} bind:windowWidth={windowWidth} bind:previewText={previewText}/>
         <!--This will flip between light and dark mode for the mobile platform-->
         <div class="rounded-3xl bg-blue-900 text-white">
             <div role="menuitem" tabindex="-2" on:click={()=>{
+                //This will set all the preset variables to either be light or dark.
                 if(lightModeTrigger == "right-[2.5px]") {
                     lightModeTrigger = "left-[2.5px]";
                     lightDark = "bg-black-200 text-white";
@@ -153,7 +123,8 @@
                 }
             }} on:keydown={()=>{}} class="rounded-3xl bg-blue-900 w-[60px] h-[30px] float-right overflow-hidden relative">
                 <div class="w-[25px] h-[25px] bg-blue-1000 rounded-3xl absolute top-[2.5px] {lightModeTrigger}">
-                <img src="{lightIcon}" class="mx-[auto] mt-[3px]" width="{width}" alt="light-dark-icon"/>
+                    <!--Light and Dark Icon-->
+                    <img src="{lightIcon}" class="mx-[auto] mt-[3px]" width="{width}" alt="light-dark-icon"/>
                 </div>
             </div>
         </div>
@@ -229,37 +200,11 @@
 
 <div class="bg-blue-1000 py-2.5 px-[40px] inline-block fixed overflow-hidden rounded-3xl top-4 left-4 shadow-in z-10">
     <h3 class="text-blue-900">Demerit Slip</h3>
-</div>
 
-<div class="h-auto w-auto bg-blue-1000 py-1.5 px-2.5 menu:p-0 inline-block overflow-hidden rounded-3xl fixed right-4 top-4 shadow-in z-50">
 
-    <div class="float-right clear-left inline-block menu:hidden">
-        {#each ["preview", "pdf", "print"] as button, i}
-        <button  on:click={()=>{eval(button + "()")}} class="px-4 {i == 0 ? 'mr-1' : ""} {i == 3 ? "ml-1" : ""} {i != 0 && i != 3 ? 'mx-1' : ""} py-1 rounded-3xl text-blue-900 hover:bg-blue-900 hover:text-blue-1000">
-            {#if i == 0}
-                {previewText}
-            {:else}
-                {button}
-            {/if}
-        </button>
-        {/each}
+    <div class="h-auto w-auto bg-blue-1000 py-1.5 px-2.5 menu:p-0 inline-block overflow-hidden rounded-3xl fixed right-4 top-4 shadow-in z-100">
+        <Menu bind:windowWidth={windowWidth} bind:button={button} bind:state={state} bind:previewOpen={previewOpen} bind:previewText={previewText}/>
     </div>
-
-    <!--This is the mobile menu for hte site-->
-    <div role="menu" tabindex="0" on:keydown={()=>{}} class="hidden menu:block menu:w-[42px] menu:h-[42px] overflow-y-hidden" on:click={()=>{
-        if(!button) {
-            mlMenu = "ml-[20%]"; 
-            button = true;
-        } else {
-            mlMenu = "ml-[40%]";
-            button = false;
-        }
-    }}>
-        <!--Menu Tabs-->
-        <div class="w-[60%] h-[6px] bg-blue-900 rounded-xl ml-[20%] mt-[12px]"></div>
-        <div class="w-[40%] h-[6px] bg-blue-900 rounded-xl {mlMenu} mt-[5px]"></div>
-    </div>
-
 
 </div>
 
