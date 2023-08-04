@@ -1,8 +1,11 @@
 <script lang="ts">
+    import  jsPDF  from "jspdf"; 
+    import html2canvas from "html2canvas";
     export let previewText : string;
     //Open-close menu options
     let mlMenu : string = "ml-[40%]";
     export let button : boolean = false;
+    export let page : HTMLElement | null;
 
     export let windowWidth : number = 100000;
     export let state : number = 1;
@@ -39,6 +42,14 @@
             }
         }
         
+    }
+
+    const pdf = ()=>{
+        console.log(page);
+        let html : HTMLElement = page as HTMLElement;
+        html2canvas(html).then((canvas)=>{
+            document.body.appendChild(canvas);
+        });
     }
 
 </script>

@@ -4,7 +4,6 @@
     import Modal from "$lib/modal.svelte";
     import Slip from "$lib/slip.svelte";
     import Menu from "$lib/menu.svelte";
-    import  jsPDF  from "jspdf"; 
     
     //THis will create some default values for the output strings
     let outputText : {[key:string] : string} = {};
@@ -12,9 +11,6 @@
     for(let k in temp) {
         outputText[k] = temp[k];
     }
-
-
-    const doc : any = new jsPDF();
 
     //These will be some values I will bind to the page, mostly to display the date modal
     let dateModal : boolean;
@@ -36,6 +32,9 @@
     //Save modal info
     let openModal : boolean = false;
     let pdfName : string = "Demerit Slip";
+
+    let bigPage : HTMLElement | null = null;
+    let smallPage : HTMLElement | null = null;
 
 
     //THis will return the pdf
@@ -93,7 +92,7 @@
 
 {#if previewOpen && windowWidth < 856}
 <div class="absolute w-[100vw] h-[100vh] top-0 left-0 z-10 overflow-y-scroll bg-gray-100">
-    <Slip mobileDisplay={windowWidth < 856 ? true : false} cont={false} contSymbol={""} outputText={outputText} timeValue={finalTime} windowWidth={windowWidth}/>
+    <Slip bind:page={smallPage} mobileDisplay={windowWidth < 856 ? true : false} cont={false} contSymbol={""} outputText={outputText} timeValue={finalTime} windowWidth={windowWidth}/>
 </div>
 {/if}
 
@@ -101,7 +100,7 @@
 <div>
     {#if button}
     <Modal>
-        <Menu mobileOptions={true} bind:previewOpen={previewOpen} bind:button={button} bind:windowWidth={windowWidth} bind:previewText={previewText}/>
+        <Menu page={smallPage} mobileOptions={true} bind:previewOpen={previewOpen} bind:button={button} bind:windowWidth={windowWidth} bind:previewText={previewText}/>
         <!--This will flip between light and dark mode for the mobile platform-->
         <div class="rounded-3xl bg-blue-900 text-white">
             <div role="menuitem" tabindex="-2" on:click={()=>{
@@ -203,7 +202,7 @@
 
 
     <div class="h-auto w-auto bg-blue-1000 py-1.5 px-2.5 menu:p-0 inline-block overflow-hidden rounded-3xl fixed right-4 top-4 shadow-in z-100">
-        <Menu bind:windowWidth={windowWidth} bind:button={button} bind:state={state} bind:previewOpen={previewOpen} bind:previewText={previewText}/>
+        <Menu page={bigPage} bind:windowWidth={windowWidth} bind:button={button} bind:state={state} bind:previewOpen={previewOpen} bind:previewText={previewText}/>
     </div>
 
 </div>
@@ -211,7 +210,7 @@
 <div class="h-[100vh] w-auto overflow-x-hidden flex items-center justify-center">
 
     <!--This is the main content area, which is where you will write the content to the page-->
-    <Slip cont={state == 0 ? false : true} contSymbol={state == 0 ? "" : contSymbol} lightDark={lightDark} bind:dateModal={dateModal} bind:timeStuff={timeStuff} bind:timeValue={timeValue} bind:dateValue={dateValue} bind:outputText={outputText}/>
+    <Slip bind:page={bigPage} cont={state == 0 ? false : true} contSymbol={state == 0 ? "" : contSymbol} lightDark={lightDark} bind:dateModal={dateModal} bind:timeStuff={timeStuff} bind:timeValue={timeValue} bind:dateValue={dateValue} bind:outputText={outputText}/>
     
 </div>
 
