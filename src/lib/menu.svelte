@@ -11,6 +11,8 @@
     export let state : number = 1;
     export let previewOpen : boolean = false;
     export let mobileOptions : boolean = false;
+    export let pageHolder : HTMLElement | null;
+
 
     console.log(mobileOptions);
 
@@ -46,10 +48,63 @@
 
     const pdf = ()=>{
         console.log(page);
+        let doc = new jsPDF('p', 'px', [816, 1056]);
         let html : HTMLElement = page as HTMLElement;
-        html2canvas(html).then((canvas)=>{
-            document.body.appendChild(canvas);
-        });
+        let target = html.childNodes[6] as HTMLElement;
+        let canvas : HTMLCanvasElement = document.createElement("canvas");
+        canvas.width = 816;
+        canvas.setAttribute("style", "background-color:#ff0000");
+        canvas.height = 1056;
+        let ctx : any = canvas.getContext("2d");
+
+        ctx.font = "17px Arial";
+
+        let fitWidth : number = 816 - (96 * 2);
+
+        let y : number = 96;
+
+        let emptyString : string = "";
+        for(let i = 0; i < target.innerText.split(" ").length; i++) {
+            emptyString += target.innerText.split(" ")[i] + " ";
+            if(ctx.measureText(emptyString).width > fitWidth) {
+                let lastWord : string = emptyString.split(" ")[emptyString.split(" ").length - 2];
+                let line : string = emptyString.substring(0, emptyString.length - (1 + lastWord.length));
+                console.log(emptyString);
+                ctx.fillText(line, 96, y)
+                emptyString = lastWord + " ";
+                y += 24;
+            }
+        }
+
+        ctx.fillText(emptyString, 96, y);
+
+        document.body.appendChild(canvas);
+
+
+        /*setTimeout(()=>{
+            let imgDat = canvas.toDataURL("image/png");
+            console.log(imgDat);
+            doc.addImage(imgDat, "PNG", 0, 0, 816, 1056);
+            doc.save("sample-file-idk.pdf");
+        }, 1500);*/
+       
+
+
+        /*if(pageHolder != null) {
+            let pH : HTMLElement = pageHolder as HTMLElement;
+            pH.style.transform = "scale(1.0)"; //This will scale the page up
+        }
+        let html : HTMLElement = page as HTMLElement;
+        setTimeout(()=>{
+            html2canvas(html, {
+                width: 816,
+                height: 1056
+            }).then((canvas)=>{
+                let imgData = canvas.toDataURL("image.png");
+                
+                doc.addImage(imgData, 'PNG', 0, 0, 816, 1056);
+                doc.save('sample-file.pdf');
+            });*/
     }
 
 </script>

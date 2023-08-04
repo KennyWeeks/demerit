@@ -10,6 +10,7 @@
     export let mobileDisplay : boolean = false;
     export let windowWidth : number = 0;
     export let page : HTMLElement | null;
+    export let pageHolder : HTMLElement | null;
 
     let tableContent : Array<Array<string>> = [["", "Recruit Signature", "HR #", "Date"], ["", "Academy Staff Signature", "HR #", "Date"]];
 
@@ -125,7 +126,7 @@
 
 </script>
 
-<div style={mobileDisplay ? "transform:scale(" + windowWidth / 856 + ")" : ''} class="w-[856px] h-[1096px] mt-[500px] paper:mt-[0px] paper:h-auto flex items-center justify-center relative">
+<div bind:this={pageHolder} style={mobileDisplay ? "transform:scale(" + windowWidth / 856 + ")" : ''} class="w-[856px] h-[1096px] mt-[500px] paper:mt-[0px] paper:h-auto flex items-center justify-center relative">
     <div bind:this={page} class="w-[816px] h-[1056px] {!mobileDisplay ? lightDark + " paper:w-[100vw] paper:h-[100vh]" : 'bg-white' }">
 
         <img src="demerit_logo.png" width={816 - (96*2)} class="ml-[105px] mt-[52px] {!mobileDisplay ? "paper:hidden" : ''}" alt="demerit_title"/>
@@ -168,7 +169,7 @@
             {:else}
             {outputText["#"]}
             {/if}</span> 
-            demerit points at approximately 
+            demerit&nbsp;points&nbsp;at&nbsp;approximately&nbsp; 
             <span data-name="time" on:focus={(e)=>{clearText(e)}} class={contSymbol} contenteditable={cont}>{timeValue}</span>
             for <span data-name="a/an" on:focus={(e)=>{clearText(e)}} on:blur={(e)=>{blurCheck(e);}} class={contSymbol} contenteditable={cont}>
                 {#if !mobileDisplay}
