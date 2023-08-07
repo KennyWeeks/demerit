@@ -126,7 +126,7 @@
             }} on:keydown={()=>{}} class="rounded-3xl bg-blue-900 w-[60px] h-[30px] float-right overflow-hidden relative">
                 <div class="w-[25px] h-[25px] bg-blue-1000 rounded-3xl absolute top-[2.5px] {lightModeTrigger}">
                     <!--Light and Dark Icon-->
-                    <img src="{lightIcon}" class="mx-[auto] mt-[3px]" width="{width}" alt="light-dark-icon"/>
+                    <img src="{base}/{lightIcon}" class="mx-[auto] mt-[3px]" width="{width}" alt="light-dark-icon"/>
                 </div>
             </div>
         </div>
@@ -143,7 +143,7 @@
                 <div class="p-[7.5px] rounded-3xl bg-white absolute top-[-35px] right-0" role="button" tabindex="-3" on:keypress={()=>{}} on:click={()=>{
                     dateModal = false;
                 }}>
-                    <img src="close.png" width="15" alt="close-icon"/>
+                    <img src="{base}/close.png" width="15" alt="close-icon"/>
                 </div>
 
                 <!--This will be some html formatting so that the date can be selected from a predefined set of data-->
@@ -174,7 +174,7 @@
                 <div class="p-[7.5px] rounded-3xl bg-white absolute top-[-35px] right-0" role="button" tabindex="-3" on:keypress={()=>{}} on:click={()=>{
                     openModal = false;
                 }}>
-                    <img src="close.png" width="15" alt="close-icon"/>    
+                    <img src="{base}/close.png" width="15" alt="close-icon"/>    
                 </div>
                 
                 <!--This is the view box, like the final preview-->
