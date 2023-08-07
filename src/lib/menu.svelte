@@ -209,7 +209,16 @@
 
     <div class="float-right clear-left inline-block {mobileOptions ? "" : "menu:hidden"}">
         {#each ["preview", "pdf", "print"] as button, i}
-        <button  on:click={()=>{eval(button + "()")}} class="px-4 {i == 0 && !mobileOptions ? 'mr-1' : ""} {i == 3 && !mobileOptions ? "ml-1" : ""} {i != 0 && i != 3 && !mobileOptions ? 'mx-1' : ""} {mobileOptions ? "w-[100%] mb-[5px]" : ""} py-1 rounded-3xl {mobileOptions ? "block text-blue-1000 bg-blue-900" : "text-blue-900 hover:bg-blue-900 hover:text-blue-1000 "}">
+        <button  on:click={()=>{
+            if(i == 0) {
+                preview();
+            } else if(i == 1) {
+                pdf();
+            } else {
+                print();
+            }
+        }
+        } class="px-4 {i == 0 && !mobileOptions ? 'mr-1' : ""} {i == 3 && !mobileOptions ? "ml-1" : ""} {i != 0 && i != 3 && !mobileOptions ? 'mx-1' : ""} {mobileOptions ? "w-[100%] mb-[5px]" : ""} py-1 rounded-3xl {mobileOptions ? "block text-blue-1000 bg-blue-900" : "text-blue-900 hover:bg-blue-900 hover:text-blue-1000 "}">
             {#if i == 0}
                 {previewText}
             {:else}
