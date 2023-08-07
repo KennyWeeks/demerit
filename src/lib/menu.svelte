@@ -46,16 +46,21 @@
         
     }
 
-    const pdf = ()=>{
-        console.log(page);
-        let doc = new jsPDF('p', 'px', [816, 1056]);
-        let html : HTMLElement = page as HTMLElement;
-        let target = html.childNodes[6] as HTMLElement;
-        let canvas : HTMLCanvasElement = document.createElement("canvas");
+    const createPDF = (pdf: jsPDF | null) => {
+        //THis will be the canvas rendering context
+        const canvas : HTMLCanvasElement = document.createElement("canvas");
         canvas.width = 816;
-        canvas.setAttribute("style", "background-color:#ffffff; margin:auto; outline:none;");
         canvas.height = 1056;
-        let ctx : any = canvas.getContext("2d");
+        canvas.setAttribute("style", "background-color:#ffffff; margin:auto; outline:none;");
+        
+        //This is the context, which is where everything is rendered
+        const ctx : any | null = canvas.getContext("2d");
+        
+        //Type cast the page variable to an HTMLElement to no longer get errors
+        let html : HTMLElement = page as HTMLElement;
+
+        //Get the body content and type cast it
+        let target = html.childNodes[6] as HTMLElement;
 
         ctx.font = "17px Arial";
 
@@ -63,42 +68,33 @@
 
         let y : number = 96;
 
-        /*
-        const canvas = document.querySelector("canvas");
-		const ctx = canvas.getContext("2d");
-		let base_image = new Image();
-		base_image.src = "demerit_logo.png";
-		base_image.onload = ()=>{
-			ctx.drawImage(base_image, 105, 52, 624, 100);
-		}
 
-        */
-
-        
-
-        //So paddin is 10, and the height of the menu seems to be a height of 28, so the initial starting y is 250 - (28 + 10)
-        console.log(html.childNodes[0]);
-
+        //Draw the image of the logo first
         ctx.beginPath();
         ctx.lineHeight = 0;
         ctx.strokeStyle = "white";
         let image = new Image();
         image.src = html.childNodes[0].getAttribute("src");
 
+        //Next make the intro area, the name, date, and hr # area
         let introArea : HTMLElement = html.childNodes[2] as HTMLElement;
         ctx.lineHeight = 0;
         ctx.strokeStyle = "#fff";
-;        let startingX = 96;
+        let startingX = 96; //This is the furthest left you want the image to go.
+
+        //Next you type cast the HTMLCollection to an array, and draw boxes that represent the unique size of each box.
         [...introArea.children].forEach((e : any)=>{
             console.log(e.clientWidth);
 
             ctx.font = "bold 16px Arial";
             ctx.fillStyle = "#000";
             
+            //Fill the text, and move to the next starting point
             ctx.fillText(e.innerText, startingX, 212 + 20);
             startingX += e.clientWidth;
         });
 
+        //Draw the dividing line next
         ctx.beginPath();
         ctx.lineWidth = 2;
         ctx.strokeStyle = "#000";
@@ -106,13 +102,18 @@
         ctx.lineTo(96 + 624, 250);
         ctx.stroke();
 
+        //Create the INFRACTION text here
         ctx.fillText("INFRACTION: ", 96, 290);
 
+        //Starting to draw the content now
         y = 330;
         ctx.font = "17px Arial";
 
         let emptyString : string = "";
         for(let i = 0; i < target.innerText.split(" ").length; i++) {
+
+            //Since canvas will only draw content, it won't actually format it, this will format the length of strings
+            //as needed
             emptyString += target.innerText.split(" ")[i] + " ";
             if(ctx.measureText(emptyString).width > fitWidth) {
                 let lastWord : string = emptyString.split(" ")[emptyString.split(" ").length - 2];
@@ -124,9 +125,11 @@
             }
         }
 
+        //Fill the last line
         ctx.fillText(emptyString, 96, y);
 
-    
+
+        //Draw the bottom table
         ctx.beginPath();
         ctx.fillStyle = "#000";
         ctx.lineHeight = 0.5;
@@ -134,12 +137,14 @@
         ctx.rect(96, 1056 - table.clientHeight - 96, 624, table.clientHeight);
         ctx.stroke();
 
+        //Draw the middle line
         let topOfTable : number = 1056 - table.clientHeight - 96;
         ctx.beginPath();
         ctx.moveTo(96, topOfTable + table.clientHeight / 2);
         ctx.lineTo(96 + 624, topOfTable + table.clientHeight / 2);
         ctx.stroke();
 
+        //Draw the vertical lines of the table, and add the content as needed;
         let positions : number[] = [96 + (0.02 * 624), 96 + (0.02 * 624), 96 + (0.02 * 624) + (0.5 * 624), 96 + (0.02 * 624) + (0.5 * 624) + (0.24 * 624)];
         let contents : string[][] = [["", ""], ["Recruit Signature", "Academy Staff  Signature"], ["HR #", "HR #"], ["Date", "Date"]]
         positions.forEach((e: number, index: number) => {
@@ -153,8 +158,10 @@
             ctx.fillText(contents[index][1], e + 10, topOfTable + table.clientHeight / 2 + 18);
             ctx.stroke();
         });
-        
+
         image.onload = ()=>{
+            //Since the image is the worst part of this cycle, if dont' include this function here, the Image object will not load, and the final PDF will have everythng but the image
+            //This also ensures there are not unwanted paths around the image once it is rendered.
             ctx.beginPath();
             ctx.fillStyle = "none";
             ctx.strokeStyle = "none";
@@ -163,44 +170,39 @@
             ctx.lineHeight = 0;
             ctx.drawImage(image, 105, 62, 624, 117);
             let imgData = canvas.toDataURL("image.png");
-            doc.addImage(imgData, "PNG", 0, 0, 816, 1056);
-            doc.save("sample-file.pdf");
-        };
 
-        
-
-        //document.body.appendChild(canvas);
-
-        //document.body.appendChild(canvas);
-
-        
-
-        //document.body.querySelector("canvas")
-
-        /*setTimeout(()=>{
-            let imgDat = canvas.toDataURL("image/png");
-            console.log(imgDat);
-            doc.addImage(imgDat, "PNG", 0, 0, 816, 1056);
-            doc.save("sample-file-idk.pdf");
-        }, 1500);*/
-       
-
-
-        /*if(pageHolder != null) {
-            let pH : HTMLElement = pageHolder as HTMLElement;
-            pH.style.transform = "scale(1.0)"; //This will scale the page up
-        }
-        let html : HTMLElement = page as HTMLElement;
-        setTimeout(()=>{
-            html2canvas(html, {
-                width: 816,
-                height: 1056
-            }).then((canvas)=>{
-                let imgData = canvas.toDataURL("image.png");
+            //This will print the content as needed
+            if(pdf !== null) {
+                pdf.addImage(imgData, "PNG", 0, 0, 816, 1056);
+                pdf.save("sample-file.pdf");
+            } else {
+                let windowContent = "<!DOCTYPE html><html><head><title>Print Report</title></head><body>";
+                windowContent += "<img src='" + imgData + "'/>";
+                windowContent += "</body></html>";
+                let printWindow = window.open("", "", "width=816, height=1056");
+                printWindow?.document.open();
+                printWindow?.document.write(windowContent);
+                printWindow?.document.close();
+                printWindow?.focus();
+                setTimeout(()=>{ 
+                    //THis needs to stay there, or the body isn't rendered.
+                    printWindow?.print();
+                    printWindow?.close();
+                }, 100);
                 
-                doc.addImage(imgData, 'PNG', 0, 0, 816, 1056);
-                doc.save('sample-file.pdf');
-            });*/
+            }
+        };
+    }
+
+    const pdf = ()=>{
+
+        //Set-up the document here
+        let doc = new jsPDF('p', 'px', [816, 1056]);
+        createPDF(doc);
+    }
+
+    const print = () => {
+        createPDF(null);
     }
 
 </script>
