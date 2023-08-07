@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<title>Demerit App</title>
+		<link rel="icon" href="/demerit/flame_icon.png" />
+		<meta name="viewport" content="width=device-width" />
+		
+		<link rel="modulepreload" href="/demerit/_app/immutable/entry/start.92b2119a.js">
+		<link rel="modulepreload" href="/demerit/_app/immutable/chunks/scheduler.51464032.js">
+		<link rel="modulepreload" href="/demerit/_app/immutable/chunks/singletons.c2aef8e3.js">
+		<link rel="modulepreload" href="/demerit/_app/immutable/chunks/paths.80faa9f9.js">
+		<link rel="modulepreload" href="/demerit/_app/immutable/entry/app.f4b620e8.js">
+		<link rel="modulepreload" href="/demerit/_app/immutable/chunks/preload-helper.0568906d.js">
+		<link rel="modulepreload" href="/demerit/_app/immutable/chunks/index.fd07c52c.js">
+	</head>
+	<style lang="postcss">
+		html, body {
+			width:100vw;
+			height:100vh;
+			position:relative;
+			padding:0px;
+			margin:0px;
+		}
+	</style>
+	<body style="background-color:#f2f2f2" class="data-sveltekit-preload-data="hover">
+		<div style="display: contents">
+			<script>
+				{
+					__sveltekit_16i3y61 = {
+						assets: "/demerit",
+						base: "/demerit",
+						env: {}
+					};
+
+					const element = document.currentScript.parentElement;
+
+					Promise.all([
+						import("/demerit/_app/immutable/entry/start.92b2119a.js"),
+						import("/demerit/_app/immutable/entry/app.f4b620e8.js")
+					]).then(([kit, app]) => {
+						kit.start(app, element);
+					});
+				}
+			</script>
+		</div>
+
+	</body>
+</html>

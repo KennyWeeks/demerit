@@ -4,6 +4,7 @@
     import Modal from "$lib/modal.svelte";
     import Slip from "$lib/slip.svelte";
     import Menu from "$lib/menu.svelte";
+    import { base } from "$app/paths"; 
     
     //THis will create some default values for the output strings
     let outputText : {[key:string] : string} = {};

@@ -11,6 +11,7 @@
     export let windowWidth : number = 0;
     export let page : HTMLElement | null;
     export let pageHolder : HTMLElement | null;
+    import {base} from "$app/paths";
 
     let tableContent : Array<Array<string>> = [["", "Recruit Signature", "HR #", "Date"], ["", "Academy Staff Signature", "HR #", "Date"]];
 
@@ -129,7 +130,7 @@
 <div bind:this={pageHolder} style={mobileDisplay ? "transform:scale(" + windowWidth / 856 + ")" : ''} class="w-[856px] h-[1096px] mt-[500px] paper:mt-[0px] paper:h-auto flex items-center justify-center relative">
     <div bind:this={page} class="w-[816px] h-[1056px] {!mobileDisplay ? lightDark + " paper:w-[100vw] paper:h-[100vh]" : 'bg-white' }">
 
-        <img src="demerit_logo.png" width={816 - (96*2)} class="ml-[105px] mt-[52px] {!mobileDisplay ? "paper:hidden" : ''}" alt="demerit_title"/>
+        <img src="{base}/demerit_logo.png" width={816 - (96*2)} class="ml-[105px] mt-[52px] {!mobileDisplay ? "paper:hidden" : ''}" alt="demerit_title"/>
 
         <div class="{!mobileDisplay ? "paper:w-auto paper:ml-[10%] paper:inline-block paper:mx-auto paper:mt-[5em]" : ''} w-100 h-auto py-[10px] mx-[96px] mb-4 mt-[1em] border-b-2 border-{color} flex flex-row justify-content no-wrap">
 
