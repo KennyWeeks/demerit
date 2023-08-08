@@ -74,7 +74,8 @@
         ctx.lineHeight = 0;
         ctx.strokeStyle = "white";
         let image = new Image();
-        image.src = html.childNodes[0].getAttribute("src");
+        let imageAttr : HTMLElement = html.childNodes[0] as HTMLElement;
+        image.src = imageAttr.getAttribute("src") as string; //This is needed to convert null to string
 
         //Next make the intro area, the name, date, and hr # area
         let introArea : HTMLElement = html.childNodes[2] as HTMLElement;
