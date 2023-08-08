@@ -1,6 +1,6 @@
 <script lang="ts">
-    import  jsPDF  from "jspdf"; 
-    import html2canvas from "html2canvas";
+    import jsPDF  from "jspdf"; 
+    import Modal from "./modal.svelte";
     export let previewText : string;
     //Open-close menu options
     let mlMenu : string = "ml-[40%]";
@@ -12,9 +12,9 @@
     export let previewOpen : boolean = false;
     export let mobileOptions : boolean = false;
     export let pageHolder : HTMLElement | null;
-
-
-    console.log(mobileOptions);
+    export let saveModal : boolean = false;
+    export let saveClicked : boolean = false;
+    export let fileName : string = ""; //This will be the name of the file
 
     const preview = () => {
         if(windowWidth >= 856) {
@@ -174,7 +174,8 @@
             //This will print the content as needed
             if(pdf !== null) {
                 pdf.addImage(imgData, "PNG", 0, 0, 816, 1056);
-                pdf.save("sample-file.pdf");
+                fileName += ".pdf";
+                pdf.save(fileName);
             } else {
                 let windowContent = "<!DOCTYPE html><html><head><title>Print Report</title></head><body>";
                 windowContent += "<img src='" + imgData + "'/>";
@@ -197,50 +198,57 @@
     const pdf = ()=>{
 
         //Set-up the document here
-        let doc = new jsPDF('p', 'px', [816, 1056]);
-        createPDF(doc);
+        saveModal = !saveModal;
     }
 
     const print = () => {
         createPDF(null);
     }
 
+    $: {
+        if(saveClicked) {
+            let doc = new jsPDF('p', 'px', [816, 1056]);
+            createPDF(doc);
+        }
+    }
+
 </script>
 
-    <div class="float-right clear-left inline-block {mobileOptions ? "" : "menu:hidden"}">
-        {#each ["preview", "pdf", "print"] as button, i}
-        <button  on:click={()=>{
-            if(i == 0) {
-                preview();
-            } else if(i == 1) {
-                pdf();
-            } else {
-                print();
-            }
-        }
-        } class="px-4 {i == 0 && !mobileOptions ? 'mr-1' : ""} {i == 3 && !mobileOptions ? "ml-1" : ""} {i != 0 && i != 3 && !mobileOptions ? 'mx-1' : ""} {mobileOptions ? "w-[100%] mb-[5px]" : ""} py-1 rounded-3xl {mobileOptions ? "block text-blue-1000 bg-blue-900" : "text-blue-900 hover:bg-blue-900 hover:text-blue-1000 "}">
-            {#if i == 0}
-                {previewText}
-            {:else}
-                {button}
-            {/if}
-        </button>
-        {/each}
-    </div>
-    {#if !mobileOptions}
-    <!--This is the mobile menu for hte site-->
-    <div role="menu" tabindex="0" on:keydown={()=>{}} class="hidden menu:block menu:w-[42px] menu:h-[42px] overflow-y-hidden" on:click={()=>{
-        if(!button) {
-            mlMenu = "ml-[20%]"; 
-            button = true;
+<div class="float-right clear-left inline-block {mobileOptions ? "" : "menu:hidden"}">
+    {#each ["preview", "pdf", "print"] as button, i}
+    <button  on:click={()=>{
+        if(i == 0) {
+            preview();
+        } else if(i == 1) {
+            pdf();
         } else {
-            mlMenu = "ml-[40%]";
-            button = false;
+            print();
         }
-    }}>
-        <!--Menu Tabs-->
-        <div class="w-[60%] h-[6px] bg-blue-900 rounded-xl ml-[20%] mt-[12px]"></div>
-        <div class="w-[40%] h-[6px] bg-blue-900 rounded-xl {mlMenu} mt-[5px]"></div>
-    </div>
-    {/if}
+    }
+    } class="px-4 {i == 0 && !mobileOptions ? 'mr-1' : ""} {i == 3 && !mobileOptions ? "ml-1" : ""} {i != 0 && i != 3 && !mobileOptions ? 'mx-1' : ""} {mobileOptions ? "w-[100%] mb-[5px]" : ""} py-1 rounded-3xl {mobileOptions ? "block text-blue-1000 bg-blue-900" : "text-blue-900 hover:bg-blue-900 hover:text-blue-1000 "}">
+        {#if i == 0}
+            {previewText}
+        {:else}
+            {button}
+        {/if}
+    </button>
+    {/each}
+</div>
+{#if !mobileOptions}
+<!--This is the mobile menu for hte site-->
+<div role="menu" tabindex="0" on:keydown={()=>{}} class="hidden menu:block menu:w-[42px] menu:h-[42px] overflow-y-hidden" on:click={()=>{
+    if(!button) {
+        mlMenu = "ml-[20%]"; 
+        button = true;
+    } else {
+        mlMenu = "ml-[40%]";
+        button = false;
+    }
+}}>
+    <!--Menu Tabs-->
+    <div class="w-[60%] h-[6px] bg-blue-900 rounded-xl ml-[20%] mt-[12px]"></div>
+    <div class="w-[40%] h-[6px] bg-blue-900 rounded-xl {mlMenu} mt-[5px]"></div>
+</div>
+{/if}
+
 

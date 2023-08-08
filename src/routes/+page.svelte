@@ -1,5 +1,6 @@
 <script lang="ts">
     import {onMount} from "svelte";
+    import  jsPDF  from "jspdf"; 
     import "../app.css";
     import Modal from "$lib/modal.svelte";
     import Slip from "$lib/slip.svelte";
@@ -21,6 +22,7 @@
     let totalTime : string; //THis is the total time after it has been editted.
     let lightIcon : string = "dark.png";
     let width : number = 11;
+    let fileName : string = "Demerit_Slip";
 
     //These variables will be used for the date    
     
@@ -33,6 +35,9 @@
     //Save modal info
     let openModal : boolean = false;
     let pdfName : string = "Demerit Slip";
+
+    let savePDFModal : boolean = false;
+    let saveClick : boolean = false;
 
     let bigPage : HTMLElement | null = null;
     let smallPage : HTMLElement | null = null;
@@ -103,7 +108,17 @@
 <div>
     {#if button}
     <Modal>
-        <Menu page={smallPage} mobileOptions={true} bind:pageHolder={pageHolder} bind:previewOpen={previewOpen} bind:button={button} bind:windowWidth={windowWidth} bind:previewText={previewText}/>
+        <Menu 
+        page={smallPage}
+        mobileOptions={true}
+        fileName={fileName}
+        bind:pageHolder={pageHolder} 
+        bind:previewOpen={previewOpen} 
+        bind:button={button} 
+        bind:windowWidth={windowWidth} 
+        bind:previewText={previewText}
+        bind:saveModal={savePDFModal}
+        bind:saveClicked={saveClick}/>
         <!--This will flip between light and dark mode for the mobile platform-->
         <div class="rounded-3xl bg-blue-900 text-white">
             <div role="menuitem" tabindex="-2" on:click={()=>{
@@ -200,12 +215,48 @@
     </div>
 {/if}
 
+{#if savePDFModal}
+<div class="absolute w-[100vw] h-[100vh] bg-black-100 z-50 flex jusity-content items-center">
+    <Modal classData="mx-auto overflow-visible">
+        <div class="p-[20px] bg-blue-1000 rounded-md relative">
+            <div class="p-[7.5px] rounded-3xl bg-white absolute top-[-35px] right-0" role="button" tabindex="-3" on:keypress={()=>{}} on:click={()=>{
+                savePDFModal = !savePDFModal; //Boolean toggle
+            }}>
+                <img src="{base}/close.png" width="15" alt="close-icon"/>    
+            </div>
+            <label for="save_file" class="font-bold">File Name</label><br>
+            <input class="mb-[10px] mt-[5px] border-2 border-blue-900 outline-none pl-[3px]" type="text" name="save_file" bind:value={fileName} on:blur={(e)=>{
+                if(fileName.length == 0) {
+                    fileName = "Demerit_Slip"
+                }
+            }}/><br>
+            <label for="date_check" class="font-bold">Would you like to add today's date to the file name</label>
+            <input type="checkbox" name="date_check" class="border-2 border-blue-900"/><br>
+            <button on:click={()=>{
+                saveClick = true;
+            }} class="bg-blue-900 text-blue-1000 px-[10px] py-[5px] rounded-md mt-[10px]">Save as PDF</button>
+        </div>
+    </Modal>
+</div>
+{/if}
+
+
 <div class="bg-blue-1000 py-2.5 px-[40px] inline-block fixed overflow-hidden rounded-3xl top-4 left-4 shadow-in z-10">
     <h3 class="text-blue-900">Demerit Slip</h3>
 
 
     <div class="h-auto w-auto bg-blue-1000 py-1.5 px-2.5 menu:p-0 inline-block overflow-hidden rounded-3xl fixed right-4 top-4 shadow-in z-100">
-        <Menu pageHolder={null} page={bigPage} bind:windowWidth={windowWidth} bind:button={button} bind:state={state} bind:previewOpen={previewOpen} bind:previewText={previewText}/>
+        <Menu 
+        pageHolder={null}
+        page={bigPage}
+        fileName={fileName}
+        bind:windowWidth={windowWidth} 
+        bind:button={button}
+        bind:state={state}
+        bind:previewOpen={previewOpen}
+        bind:previewText={previewText}
+        bind:saveModal={savePDFModal}
+        bind:saveClicked={saveClick}/>
     </div>
 
 </div>
@@ -213,8 +264,22 @@
 <div class="h-[100vh] w-auto overflow-x-hidden flex items-center justify-center">
 
     <!--This is the main content area, which is where you will write the content to the page-->
-    <Slip pageHolder={null} bind:page={bigPage} cont={state == 0 ? false : true} contSymbol={state == 0 ? "" : contSymbol} lightDark={lightDark} bind:dateModal={dateModal} bind:timeStuff={timeStuff} bind:timeValue={timeValue} bind:dateValue={dateValue} bind:outputText={outputText}/>
+    <Slip
+    cont={state == 0 ? false : true} 
+    pageHolder={null} 
+    contSymbol={state == 0 ? "" : contSymbol} 
+    lightDark={lightDark}
+    bind:page={bigPage} 
+    bind:dateModal={dateModal} 
+    bind:timeStuff={timeStuff} 
+    bind:timeValue={timeValue} 
+    bind:dateValue={dateValue} 
+    bind:outputText={outputText}
+    />
     
 </div>
+
+<!--This will be the save modal-->
+
 
 <style></style> 
