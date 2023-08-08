@@ -219,6 +219,28 @@
              {/each}
         </table>
     
+        <div class="paper:block hidden w-[80vw] py-[20px] border-t-2 border-black mx-auto mt-[20px]">
+            
+            <h1 class="text-xl font-bold">Editor Area</h1><br>
+
+            <p class="font-bold"> Enter Demerit points here: <span class="font-normal {contSymbol}" contenteditable={cont}>(#)</span></p><br>
+
+            <p class="font-bold"> Pick your time here: <span class="font-normal {contSymbol}" contenteditable={cont}>(time)</span></p><br>
+
+            <p class="font-bold"> Write infraction here: <span class="font-normal {contSymbol}" contenteditable={cont}>(infraction)</span></p><br>
+
+            <p class="font-bold"> Write who assigned the infraction here: <span class="font-normal {contSymbol}" contenteditable={cont}>(Who assigned you the demerit, if Capt. Spell out Captain)</span></p><br>
+
+            <p class="font-bold"> Write your reason here: <span class="font-normal {contSymbol}" contenteditable={cont}>(...)</span></p><br>
+
+        </div>
+
+    </div>
+
+    <div class="paper:block hidden w-[60px] h-[30px] rounded-3xl bg-blue-900 absolute bottom-[10px] right-[10px]">
+
+        <div class="bg-blue-1000 h-[25px] w-[25px] rounded-3xl absolute top-[1.75px] left-[2.5px]"></div>
+
     </div>
 
 </div>

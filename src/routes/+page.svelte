@@ -23,6 +23,8 @@
     let lightIcon : string = "dark.png";
     let width : number = 11;
     let fileName : string = "Demerit_Slip";
+    let addDate : boolean = false;
+    let fileDate : string = "";
 
     //These variables will be used for the date    
     
@@ -229,10 +231,19 @@
                 if(fileName.length == 0) {
                     fileName = "Demerit_Slip"
                 }
-            }}/><br>
+            }}/> <label for="save_file">{fileDate}</label><br>
             <label for="date_check" class="font-bold">Would you like to add today's date to the file name</label>
-            <input type="checkbox" name="date_check" class="border-2 border-blue-900"/><br>
+            <input type="checkbox" name="date_check" class="border-2 border-blue-900" on:change={()=>{
+                addDate = !addDate;
+                if(addDate) {
+                    let d = new Date();
+                    fileDate += "_" + d.getMonth() + "." + d.getDate() + "." + d.getFullYear();
+                } else {
+                    fileDate = "";
+                }
+            }}/><br>
             <button on:click={()=>{
+                fileName += fileDate;
                 saveClick = true;
             }} class="bg-blue-900 text-blue-1000 px-[10px] py-[5px] rounded-md mt-[10px]">Save as PDF</button>
         </div>
