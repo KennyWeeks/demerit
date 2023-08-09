@@ -134,7 +134,7 @@
 
 </script>
 
-<div style={mobileDisplay ? "transform:scale(" + windowWidth / 856 + ");" : ''} class="w-[856px] h-[1096px] mt-[50px] paper:mt-[0px] paper:h-[100vh] flex justify-center relative">
+<div style={mobileDisplay ? "transform:scale(" + windowWidth / 856 + ");" : ''} class="w-[856px] h-[1096px] mt-[50px] paper:mt-[0px] flex justify-center relative">
     <div bind:this={page} class="w-[816px] h-[1056px] {!mobileDisplay ? lightDark + " paper:w-[100vw] paper:h-auto" : 'bg-white' }">
 
         <img src="{base}/demerit_logo.png" width={816 - (96*2)} class="ml-[105px] mt-[52px] {!mobileDisplay ? "paper:hidden" : ''}" alt="demerit_title"/>
