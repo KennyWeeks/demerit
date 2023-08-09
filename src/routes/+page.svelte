@@ -277,7 +277,7 @@
 
 </div>
 
-<div class="h-[100vh] w-auto overflow-x-hidden flex items-center justify-center">
+<div class="h-[100%] w-auto overflow-x-hidden flex justify-center">
 
     <!--This is the main content area, which is where you will write the content to the page-->
     <Slip
