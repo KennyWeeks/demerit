@@ -43,7 +43,6 @@
 
     let bigPage : HTMLElement | null = null;
     let smallPage : HTMLElement | null = null;
-    let pageHolder : HTMLElement | null = null;
 
 
     //THis will return the pdf
@@ -102,7 +101,15 @@
 
 {#if previewOpen && windowWidth < 856}
 <div class="absolute w-[100vw] h-[100vh] top-0 left-0 z-10 overflow-y-scroll bg-gray-100">
-    <Slip bind:pageHolder={pageHolder} bind:page={smallPage} mobileDisplay={windowWidth < 856 && !pdfPrint ? true : false} cont={false} contSymbol={""} outputText={outputText} timeValue={finalTime} windowWidth={windowWidth}/>
+    <Slip 
+    mobileDisplay={windowWidth < 856 && !pdfPrint ? true : false}
+    cont={false} 
+    contSymbol={""}
+    outputText={outputText}
+    timeValue={finalTime}
+    windowWidth={windowWidth}
+    editorVisible={false}
+    bind:page={smallPage}/>
 </div>
 {/if}
 
@@ -114,7 +121,6 @@
         page={smallPage}
         mobileOptions={true}
         fileName={fileName}
-        bind:pageHolder={pageHolder} 
         bind:previewOpen={previewOpen} 
         bind:button={button} 
         bind:windowWidth={windowWidth} 
@@ -258,7 +264,6 @@
 
     <div class="h-auto w-auto bg-blue-1000 py-1.5 px-2.5 menu:p-0 inline-block overflow-hidden rounded-3xl fixed right-4 top-4 shadow-in z-100">
         <Menu 
-        pageHolder={null}
         page={bigPage}
         fileName={fileName}
         bind:windowWidth={windowWidth} 
@@ -277,9 +282,9 @@
     <!--This is the main content area, which is where you will write the content to the page-->
     <Slip
     cont={state == 0 ? false : true} 
-    pageHolder={null} 
     contSymbol={state == 0 ? "" : contSymbol} 
     lightDark={lightDark}
+    editorVisible={windowWidth <= 856 ? true : false}
     bind:page={bigPage} 
     bind:dateModal={dateModal} 
     bind:timeStuff={timeStuff} 

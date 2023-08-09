@@ -8,9 +8,9 @@
     export let timeStuff : boolean = false; //Open the time option in the data modal
     export let timeValue : string = "(time)";
     export let mobileDisplay : boolean = false;
-    export let windowWidth : number = 0;
+    export let windowWidth : number = 0; //This will be for some reactive styles
     export let page : HTMLElement | null;
-    export let pageHolder : HTMLElement | null;
+    export let editorVisible : boolean; //This will determine whether the editor will be visible to the user
     import {base} from "$app/paths";
 
     let tableContent : Array<Array<string>> = [["", "Recruit Signature", "HR #", "Date"], ["", "Academy Staff Signature", "HR #", "Date"]];
@@ -127,7 +127,7 @@
 
 </script>
 
-<div bind:this={pageHolder} style={mobileDisplay ? "transform:scale(" + windowWidth / 856 + ")" : ''} class="w-[856px] h-[1096px] mt-[500px] paper:mt-[0px] paper:h-auto flex items-center justify-center relative">
+<div style={mobileDisplay ? "transform:scale(" + windowWidth / 856 + ")" : ''} class="w-[856px] h-[1096px] mt-[500px] paper:mt-[0px] paper:h-auto flex items-center justify-center relative">
     <div bind:this={page} class="w-[816px] h-[1056px] {!mobileDisplay ? lightDark + " paper:w-[100vw] paper:h-[100vh]" : 'bg-white' }">
 
         <img src="{base}/demerit_logo.png" width={816 - (96*2)} class="ml-[105px] mt-[52px] {!mobileDisplay ? "paper:hidden" : ''}" alt="demerit_title"/>
@@ -218,28 +218,25 @@
              </tr>
              {/each}
         </table>
-    
-        <div class="paper:block hidden w-[80vw] py-[20px] border-t-2 border-black mx-auto mt-[20px]">
-            
-            <h1 class="text-xl font-bold">Editor Area</h1><br>
 
-            <p class="font-bold"> Enter Demerit points here: <span class="font-normal {contSymbol}" contenteditable={cont}>(#)</span></p><br>
+        {#if editorVisible}
+            <!--This will be the editor for the mobile platform-->
+            <div class="paper:block hidden w-[80vw] py-[20px] border-t-2 border-black mx-auto mt-[20px]">
+                
+                <h1 class="text-xl font-bold">Editor Area</h1><br>
 
-            <p class="font-bold"> Pick your time here: <span class="font-normal {contSymbol}" contenteditable={cont}>(time)</span></p><br>
+                <p class="font-bold"> Enter Demerit points here: <span class="font-normal {contSymbol}" contenteditable={cont}>(#)</span></p><br>
 
-            <p class="font-bold"> Write infraction here: <span class="font-normal {contSymbol}" contenteditable={cont}>(infraction)</span></p><br>
+                <p class="font-bold"> Pick your time here: <span class="font-normal {contSymbol}" contenteditable={cont}>(time)</span></p><br>
 
-            <p class="font-bold"> Write who assigned the infraction here: <span class="font-normal {contSymbol}" contenteditable={cont}>(Who assigned you the demerit, if Capt. Spell out Captain)</span></p><br>
+                <p class="font-bold"> Write infraction here: <span class="font-normal {contSymbol}" contenteditable={cont}>(infraction)</span></p><br>
 
-            <p class="font-bold"> Write your reason here: <span class="font-normal {contSymbol}" contenteditable={cont}>(...)</span></p><br>
+                <p class="font-bold"> Write who assigned the infraction here: <span class="font-normal {contSymbol}" contenteditable={cont}>(Who assigned you the demerit, if Capt. Spell out Captain)</span></p><br>
 
-        </div>
+                <p class="font-bold"> Write your reason here: <span class="font-normal {contSymbol}" contenteditable={cont}>(...)</span></p><br>
 
-    </div>
-
-    <div class="paper:block hidden w-[60px] h-[30px] rounded-3xl bg-blue-900 absolute bottom-[10px] right-[10px]">
-
-        <div class="bg-blue-1000 h-[25px] w-[25px] rounded-3xl absolute top-[1.75px] left-[2.5px]"></div>
+            </div>
+        {/if}
 
     </div>
 

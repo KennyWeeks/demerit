@@ -11,13 +11,14 @@
     export let state : number = 1;
     export let previewOpen : boolean = false;
     export let mobileOptions : boolean = false;
-    export let pageHolder : HTMLElement | null;
     export let saveModal : boolean = false;
     export let saveClicked : boolean = false;
     export let fileName : string = ""; //This will be the name of the file
 
+    //THis is the preview function
     const preview = () => {
         if(windowWidth >= 856) {
+            //In this case, it will only change the page so that the contendible content is not longer editable
             if(state == 0) {
                 state = 1;
                 previewText = "preview";
@@ -26,17 +27,11 @@
                 previewText = "edit";
             }
         } else {
-            console.log("---------[");
-            console.log(previewOpen);
-            console.log(previewText);
-            console.log("---------[");
+            //THis will actually open the other page, the one that looks like the final document.
             if(!previewOpen) {
                 previewOpen = true;
                 button = false;
                 previewText = "edit";
-                console.log(previewText);
-                console.log(mobileOptions);
-                console.log("------");
             } else {
                 previewOpen = false;
                 button = false;
@@ -197,7 +192,6 @@
     }
 
     const pdf = ()=>{
-
         //Set-up the document here
         saveModal = !saveModal;
     }
@@ -207,9 +201,11 @@
     }
 
     $: {
+        //So this one is the 
         if(saveClicked) {
             let doc = new jsPDF('p', 'px', [816, 1056]);
             createPDF(doc);
+            saveClicked = false; //Make this false in the end again, so that we don't keep getting asked if we want to downloadthe pdf again.
         }
     }
 
