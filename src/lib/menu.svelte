@@ -99,9 +99,11 @@
             ctx.font = "bold 16px Arial";
             ctx.fillStyle = "#000";
             
+            console.log(clientWidth[index].clientWidth);
+
             //Fill the text, and move to the next starting point
             ctx.fillText(e.innerText, startingX, 212 + 20);
-            startingX += e.clientWidth;
+            startingX += clientWidth[index].clientWidth;
             console.log(startingX);
         });
 
