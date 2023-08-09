@@ -30,12 +30,12 @@
             //THis will actually open the other page, the one that looks like the final document.
             if(!previewOpen) {
                 previewOpen = true;
-                button = false;
                 previewText = "edit";
+                button = false;
             } else {
                 previewOpen = false;
-                button = false;
                 previewText = "preview";
+                button = false;
             }
         }
         
@@ -211,6 +211,9 @@
             let doc = new jsPDF('p', 'px', [816, 1056]);
             createPDF(doc);
             saveClicked = false; //Make this false in the end again, so that we don't keep getting asked if we want to downloadthe pdf again.
+        }
+        if(!button) {
+            mlMenu = "ml-[40%]";
         }
     }
 

@@ -1,13 +1,37 @@
 <script lang="ts">
     import {onMount} from "svelte";
     import  jsPDF  from "jspdf"; 
-    import "../app.css";
-    import Modal from "$lib/modal.svelte";
-    import Slip from "$lib/slip.svelte";
-    import Menu from "$lib/menu.svelte";
+    import "../app.css"; //Import tailwindcss meta data to be used here
+    import Modal from "$lib/modal.svelte"; //This will open the different modals (menu, save pdf, and date modals)
+    import Slip from "$lib/slip.svelte"; //This will hold the content to the page
+    import Menu from "$lib/menu.svelte"; //This will actually be the menu modal (it will actually generate the content)
     import { base } from "$app/paths"; 
     
+    /*-----
+    VARIABLES STAYING ON THIS PAGE OR BEING PUSHED TO EVER PAGE
+    -----*/
+    let width : number = 11;
+    let lightIcon : string = "dark.png";
+
+    //This is used for binding the window width
+    let windowWidth : number = 100000;
+
+    //Save modal info
+    let savePDFModal : boolean = false;
+    let saveClick : boolean = false;
+
+    //This will trigger the light and dark mode
+    let lightModeTrigger : string = "right-[2.5px]";
+
+    //This is part of the menu
+    let button : boolean = false;
+
+    /*-----
+    VARIABLES GOING TO SLIP MODAL
+    -----*/
+
     //THis will create some default values for the output strings
+    //Bound to variable on slip.svelte
     let outputText : {[key:string] : string} = {};
     let temp : {[key:string]: string} = {"#": "(#)", "time": "(time)", "a/an": "(a/an infraction)", "who": "(Who assigned you the demerit, if Capt. Spell out Captain)", "elipsis": "...", "name": "your name here", "date": "date of demerit", "hr": "1234"}
     for(let k in temp) {
@@ -15,47 +39,16 @@
     }
 
     //These will be some values I will bind to the page, mostly to display the date modal
-    let dateModal : boolean;
-    let dateValue : string = "date of demerit";
-    let timeStuff : boolean;
-    let timeValue : string;
+    let dateModal : boolean; //Bound to dateModal on slip.svelte (this will be triggered when click on either data contendible area)
+    let dateValue : string = "date of demerit"; //THis is the default data value
+    let timeStuff : boolean; //Bound to timeStuff on slip.svelte (This will trigger the time input, where users can imput the time)
+    let timeValue : string; //pushed to timeValue on slip.svelte (This will hold the total time)
     let totalTime : string; //THis is the total time after it has been editted.
-    let lightIcon : string = "dark.png";
-    let width : number = 11;
-    let fileName : string = "Demerit_Slip";
-    let addDate : boolean = false;
-    let fileDate : string = "";
-
-    //These variables will be used for the date    
     
+    //These variables will be used for the date, and will combine the time and date together.
     let timeDate : string = "";
     let on : string = "";
-
-    //This is used for binding the window width
-    let windowWidth : number = 100000;
-
-    //Save modal info
-    let openModal : boolean = false;
-    let pdfName : string = "Demerit Slip";
-
-    let savePDFModal : boolean = false;
-    let saveClick : boolean = false;
-
-    let bigPage : HTMLElement | null = null;
-    let smallPage : HTMLElement | null = null;
-
-
-    //THis will return the pdf
-    const pdf = () => {
-        //So this will make a modal pop up, and that's what I want to work with
-        if(openModal) {
-            openModal = false;
-        } else {
-            openModal = true;
-        }
-    }
-
-    let previewOpen : boolean = false;
+    let finalTime : string; //This is bound to modals, and the slip page
 
     //This will change the color of the dividing line
     let color : string = "black";
@@ -63,16 +56,25 @@
     //This will set the state of the preview from the menu
     let state : number = 1;
 
-    //This will trigger the light and dark mode
-    let lightModeTrigger : string = "right-[2.5px]";
-
     //This is for the page for light and dark mode restrictions
     let contSymbol : string = "paper:border-white rounded-sm border border-black px-[5px] outline-0";
     let lightDark = "bg-white text-black-200";
-    let finalTime : string;
 
-    let button : boolean = false;
-    
+    /*-----
+    VARIABLES GOING TO MENU MODAL
+    -----*/
+    let fileName : string = "Demerit_Slip"; //This will also be pushed tothe menu modal
+    let addDate : boolean = false; //This is the flag to add the date to the fileName
+    let fileDate : string = ""; //This is the string to save the date to
+    let previewText : string = "preview"; //This will be changed in the menu, it will either be edit or preview, depending on what the user has clicked.
+
+    //These are bound to the two pages, and will be used to push content to each page and to the menu later
+    let bigPage : HTMLElement | null = null;
+    let smallPage : HTMLElement | null = null;
+
+    //This will be open the preview
+    let previewOpen : boolean = false;
+
 
     //Reactive Styling
     $: {
@@ -91,18 +93,17 @@
         totalTime = timeValue + on + timeDate;
     }
 
-    let previewText : string = "preview";
-    let pdfPrint : boolean = false;
 
 </script>
 
 <!--Binding inner width here, created some reactive variables-->
 <svelte:window bind:innerWidth={windowWidth}/>
 
+<!--This will only be visible when the screen is smaller, it is the preview for the content-->
 {#if previewOpen && windowWidth < 856}
 <div class="absolute w-[100vw] h-[100vh] top-0 left-0 z-10 overflow-y-scroll bg-gray-100">
     <Slip 
-    mobileDisplay={windowWidth < 856 && !pdfPrint ? true : false}
+    mobileDisplay={windowWidth < 856}
     cont={false} 
     contSymbol={""}
     outputText={outputText}
@@ -188,39 +189,6 @@
             </div>
         </Modal>
 
-    </div>
-{/if}
-
-{#if openModal}
-    <div class="absolute w-[100vw] h-[100vh] bg-black-100 z-40 flex jusity-content items-center">
-        <Modal classData="inline-block mx-auto overflow-visible">
-            <div class="p-[20px] bg-blue-1000 rounded-md relative">
-                <div class="p-[7.5px] rounded-3xl bg-white absolute top-[-35px] right-0" role="button" tabindex="-3" on:keypress={()=>{}} on:click={()=>{
-                    openModal = false;
-                }}>
-                    <img src="{base}/close.png" width="15" alt="close-icon"/>    
-                </div>
-                
-                <!--This is the view box, like the final preview-->
-                <div class="w-[80vw] h-[25em] bg-white shadow">
-
-                </div>
-
-                <hr class="my-[10px] bg-blue-900 h-[2px]">
-
-                <!--This will be the main body of the save, where the user will define the name, and ultimately save the content-->
-                <div>
-
-                    <label class="text-blue-900" for="save-name">Save file name under - </label>
-                    <br>
-                    <input class="border-2 border-blue-900 mt-[5px] pl-[5px]" type="text" name="save-name" placeholder="{pdfName}" bind:value={pdfName} on:focus={()=>{pdfName = ""}}/>
-                    <br>
-                    <button class="bg-blue-900 text-blue-1000 py-[5px] px-[15px] rounded-3xl mt-[10px]">save</button>
-
-                </div>
-
-            </div>
-        </Modal>
     </div>
 {/if}
 
