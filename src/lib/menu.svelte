@@ -78,9 +78,22 @@
         ctx.strokeStyle = "#fff";
         let startingX = 96; //This is the furthest left you want the image to go.
 
+        //Draw the dividing line next
+        ctx.beginPath();
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = "#000";
+        ctx.moveTo(96, 250);
+        ctx.lineTo(96 + 624, 250);
+        ctx.stroke();
+
+        let moveLeft : number = 278;
+        let moveLeftSecond : number = 216;
+
         //Next you type cast the HTMLCollection to an array, and draw boxes that represent the unique size of each box.
-        [...introArea.children].forEach((e : any)=>{
-            console.log(e.clientWidth);
+        [...introArea.children].forEach((e : any, index: number)=>{
+
+            ctx.rect(startingX, 212, e.clientWidth, 20);
+            ctx.stroke();
 
             ctx.font = "bold 16px Arial";
             ctx.fillStyle = "#000";
@@ -89,14 +102,6 @@
             ctx.fillText(e.innerText, startingX, 212 + 20);
             startingX += e.clientWidth;
         });
-
-        //Draw the dividing line next
-        ctx.beginPath();
-        ctx.lineWidth = 2;
-        ctx.strokeStyle = "#000";
-        ctx.moveTo(96, 250);
-        ctx.lineTo(96 + 624, 250);
-        ctx.stroke();
 
         //Create the INFRACTION text here
         ctx.fillText("INFRACTION: ", 96, 290);
@@ -130,28 +135,28 @@
         ctx.fillStyle = "#000";
         ctx.lineHeight = 0.5;
         let table : HTMLElement = html.childNodes[8] as HTMLElement;
-        ctx.rect(96, 1056 - table.clientHeight - 96, 624, table.clientHeight);
+        ctx.rect(96, 1056 - 125 - 96, 624, 125);
         ctx.stroke();
 
         //Draw the middle line
-        let topOfTable : number = 1056 - table.clientHeight - 96;
+        let topOfTable : number = 1056 - 125 - 96;
         ctx.beginPath();
-        ctx.moveTo(96, topOfTable + table.clientHeight / 2);
-        ctx.lineTo(96 + 624, topOfTable + table.clientHeight / 2);
+        ctx.moveTo(96, topOfTable + 125 / 2);
+        ctx.lineTo(96 + 624, topOfTable + 125 / 2);
         ctx.stroke();
 
         //Draw the vertical lines of the table, and add the content as needed;
-        let positions : number[] = [96 + (0.02 * 624), 96 + (0.02 * 624), 96 + (0.02 * 624) + (0.5 * 624), 96 + (0.02 * 624) + (0.5 * 624) + (0.24 * 624)];
-        let contents : string[][] = [["", ""], ["Recruit Signature", "Academy Staff  Signature"], ["HR #", "HR #"], ["Date", "Date"]]
+        let positions : number[] = [96 + (0.02 * 624), 96 + (0.02 * 624) + (0.5 * 624), 96 + (0.02 * 624) + (0.5 * 624) + (0.24 * 624)];
+        let contents : string[][] = [["Recruit Signature", "Academy Staff  Signature"], ["HR #", "HR #"], ["Date", "Date"]]
         positions.forEach((e: number, index: number) => {
             ctx.beginPath();
-            ctx.moveTo(e, 1056 - table.clientHeight - 96);
+            ctx.moveTo(e, 1056 - 125 - 96);
             ctx.lineTo(e, 1056 - 96);
             ctx.font = "italic 16px Arial";
             ctx.fillStyle = "#000";
             console.log(contents[index][0]);
-            ctx.fillText(contents[index][0], e + 10, 1056 - table.clientHeight - 75);
-            ctx.fillText(contents[index][1], e + 10, topOfTable + table.clientHeight / 2 + 18);
+            ctx.fillText(contents[index][0], e + 10, 1056 - 125 - 75);
+            ctx.fillText(contents[index][1], e + 10, topOfTable + 125 / 2 + 18);
             ctx.stroke();
         });
 

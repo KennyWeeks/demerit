@@ -33,6 +33,7 @@
             let pf = previousFocused as HTMLElement;
             if(date != "" && pf.getAttribute("data-name") == "date") {
                 pf.innerText = date;
+                console.log(date);
             }
 
             if(time != "" && pf.getAttribute("data-name") == "time") {

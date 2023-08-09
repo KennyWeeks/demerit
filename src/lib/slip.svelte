@@ -1,10 +1,7 @@
 <script lang="ts">
 
-
-    export let nameValue : string = "you name here";
-    export let dateValue : string = "date of demerit";
-    export let hrValue : string = "1234";
     export let dateModal : boolean = false; //Open the dateModal
+    export let dateValue : string = "";
     export let timeStuff : boolean = false; //Open the time option in the data modal
     export let timeValue : string = "(time)";
     export let mobileDisplay : boolean = false;
@@ -79,7 +76,15 @@
         the user clicks on them
         */
 
-        e.target.innerHTML = "";
+        e.target.innerText = "";
+
+        let selection : any = window.getSelection();
+        let range : any = document.createRange();
+        selection.removeAllRanges();
+        range.selectNodeContents(e.target);
+        range.collapse(false);
+        selection.addRange(range);
+        e.target.focus();
 
 
         if(e.target.getAttribute("data-name") == "date" || e.target.getAttribute("data-name") == "time") {
@@ -93,8 +98,6 @@
             }
         }
 
-        e.target.focus();
-        e.preventDefault();
     }
 
     //This will be some keypress formatting for the different parts of the contendible data
@@ -125,11 +128,9 @@
     }
 
     $: {
-        if(mobileDisplay) {
-            console.log("From the smaller slip")
-            console.log(outputText);
+        if(outputText["date"] != "date of demerit") {
+            console.log("What");
         }
-        console.log(timeValue);
     }
 
 </script>
@@ -142,7 +143,7 @@
         <div class="{!mobileDisplay ? "paper:w-auto paper:ml-[10%] paper:inline-block paper:mx-auto paper:mt-[5em]" : ''} w-100 h-auto py-[10px] mx-[96px] mb-4 mt-[1em] border-b-2 border-{color} flex flex-row justify-content no-wrap">
 
             {#each [["text-lg grow-[2]", "Name: ", outputText["name"], "name"], 
-            ["text-lg grow-[1]", "Date: ", outputText["date"], "date"],
+            ["text-lg grow-[1]", "Date: ", dateValue, "date"],
             ["text-lg grow-[1]", "Hr #: ", outputText["hr"], "hr"]] as data, i}
 
                 <div class={data[0]}>
@@ -232,9 +233,9 @@
                 
                 <h1 class="text-xl font-bold">Editor Area</h1><br>
 
-                {#each [["text-lg grow-[2]", "Enter you name here: ", nameValue, "name"], 
-                    ["text-lg grow-[1]", "Enter the date here: ", dateValue, "date"],
-                    ["text-lg grow-[1]", "Enter your Hr # here: ", hrValue, "hr"]] as data, i}
+                {#each [["text-lg", "Enter you name here: ", outputText["name"], "name"], 
+                    ["text-lg", "Enter the date here: ", dateValue, "date"],
+                    ["text-lg", "Enter your Hr # here: ", outputText["hr"], "hr"]] as data, i}
 
                         <div class={data[0]}>
                             <span class="font-bold">{data[1]}</span>

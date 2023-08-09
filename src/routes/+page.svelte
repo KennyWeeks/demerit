@@ -16,7 +16,7 @@
 
     //These will be some values I will bind to the page, mostly to display the date modal
     let dateModal : boolean;
-    let dateValue : string;
+    let dateValue : string = "date of demerit";
     let timeStuff : boolean;
     let timeValue : string;
     let totalTime : string; //THis is the total time after it has been editted.
@@ -107,6 +107,7 @@
     contSymbol={""}
     outputText={outputText}
     timeValue={finalTime}
+    dateValue={dateValue}
     editorVisible={false}
     bind:page={smallPage}
     bind:windowWidth={windowWidth}/>
@@ -160,7 +161,7 @@
 {#if dateModal}
     <div class="absolute w-[100vw] h-[100vh] bg-black-100 z-40 flex jusity-content items-center">
 
-        <Modal classData="inline-block mx-auto overflow-visible" bind:finalTime={finalTime} date={dateValue} bind:time={totalTime}>
+        <Modal classData="inline-block mx-auto overflow-visible" bind:finalTime={finalTime} bind:date={dateValue} bind:time={totalTime}>
             <div class="p-[20px] bg-blue-1000 rounded-md relative">
 
                 <div class="p-[7.5px] rounded-3xl bg-white absolute top-[-35px] right-0" role="button" tabindex="-3" on:keypress={()=>{}} on:click={()=>{
@@ -277,7 +278,7 @@
 
 </div>
 
-<div class="h-[100%] w-auto overflow-x-hidden flex justify-center">
+<div class="h-[100%] w-auto overflow-x-hidden flex justify-center paper:bg-white">
 
     <!--This is the main content area, which is where you will write the content to the page-->
     <Slip
@@ -286,10 +287,10 @@
     lightDark={lightDark}
     editorVisible={windowWidth <= 856 ? true : false}
     timeValue={finalTime}
+    dateValue={dateValue}
     bind:page={bigPage} 
     bind:dateModal={dateModal} 
     bind:timeStuff={timeStuff} 
-    bind:dateValue={dateValue} 
     bind:outputText={outputText}
     bind:windowWidth={windowWidth}
     />
