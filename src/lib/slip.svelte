@@ -28,7 +28,10 @@
     export let lightDark : string = "bg-white text-black-200"; //This will be the classes for the light and dark mode of the page.
     let color : string = "black";
     export let cont : boolean = true; //This will allow the areas to be contentdible or not
-    export let contSymbol : string = `rounded-sm border border-black px-[5px] outline-0` //This will be the border around the contentidble area
+    console.log("This is the cont logic")
+    console.log(cont);
+    export let contSymbol : string = `paper:border-white rounded-sm border border-black px-[5px] outline-0` //This will be the border around the contentidble area
+    let contSymbol2 : string = 'rounded-sm border border-black px-[5px] outline-0';
 
     const typeCheck = (e : any) => {
         if(wordCount != 100) {
@@ -89,6 +92,9 @@
                 timeStuff = false;
             }
         }
+
+        e.target.focus();
+        e.preventDefault();
     }
 
     //This will be some keypress formatting for the different parts of the contendible data
@@ -123,20 +129,21 @@
             console.log("From the smaller slip")
             console.log(outputText);
         }
+        console.log(timeValue);
     }
 
 </script>
 
-<div style={mobileDisplay ? "transform:scale(" + windowWidth / 856 + ")" : ''} class="w-[856px] h-[1096px] mt-[500px] paper:mt-[0px] paper:h-auto flex items-center justify-center relative">
+<div style={mobileDisplay ? "transform:scale(" + windowWidth / 856 + ")" : ''} class="w-[856px] h-[1096px] mt-[0px] paper:mt-[0px] paper:h-auto flex items-center justify-center relative">
     <div bind:this={page} class="w-[816px] h-[1056px] {!mobileDisplay ? lightDark + " paper:w-[100vw] paper:h-[100vh]" : 'bg-white' }">
 
         <img src="{base}/demerit_logo.png" width={816 - (96*2)} class="ml-[105px] mt-[52px] {!mobileDisplay ? "paper:hidden" : ''}" alt="demerit_title"/>
 
         <div class="{!mobileDisplay ? "paper:w-auto paper:ml-[10%] paper:inline-block paper:mx-auto paper:mt-[5em]" : ''} w-100 h-auto py-[10px] mx-[96px] mb-4 mt-[1em] border-b-2 border-{color} flex flex-row justify-content no-wrap">
 
-            {#each [["text-lg grow-[2]", "Name: ", nameValue, "name"], 
-            ["text-lg grow-[1]", "Date: ", dateValue, "date"],
-            ["text-lg grow-[1]", "Hr #: ", hrValue, "hr"]] as data, i}
+            {#each [["text-lg grow-[2]", "Name: ", outputText["name"], "name"], 
+            ["text-lg grow-[1]", "Date: ", outputText["date"], "date"],
+            ["text-lg grow-[1]", "Hr #: ", outputText["hr"], "hr"]] as data, i}
 
                 <div class={data[0]}>
                     <span class="font-bold">{data[1]}</span>
@@ -149,7 +156,7 @@
                         }} on:keyup={(e)=>{
                             keyCombo = false;
                         }} on:focus={(e)=>{clearText(e)}} on:blur={(e)=>{
-                            if(i != 1) {blurCheck(e);}}} data-name={data[3]} class="{contSymbol} {i == 0 ? "capitalize" : ""}" contenteditable={cont}>
+                            if(i != 1) {blurCheck(e);}}} data-name={data[3]} class="{contSymbol} {i == 0 ? "capitalize" : ""}" contenteditable={windowWidth > 856 ? cont : false}>
                             {data[2]}
                     </span>
                 </div>
@@ -160,45 +167,45 @@
         <h3 class="ml-[96px] text-lg font-bold uppercase mb-1.5 {!mobileDisplay ? "paper:ml-[10%]" : ''}">Infraction: </h3>
 
         <p class="mx-[96px] {!mobileDisplay ? "paper:w-[80%] paper:mx-auto" : ''}">I earned 
-            <span role="contentinfo" data-name="#" on:focus={(e)=>{clearText(e)}} on:blur={(e)=>{blurCheck(e);}} class={contSymbol} contenteditable={cont} on:keydown={(e)=>{
+            <span role="contentinfo" data-name="#" on:focus={(e)=>{clearText(e)}} on:blur={(e)=>{blurCheck(e);}} class={contSymbol} contenteditable={windowWidth > 856 ? cont : false} on:keydown={(e)=>{
                 numberFormat(e);
             }} on:keyup={(e)=>{
                 keyCombo = false;
             }}>
-            {#if !mobileDisplay}
+            {#if !mobileDisplay && windowWidth > 856}
             (#)
             {:else}
             {outputText["#"]}
             {/if}</span> 
-            demerit&nbsp;points&nbsp;at&nbsp;approximately&nbsp; 
-            <span data-name="time" on:focus={(e)=>{clearText(e)}} class={contSymbol} contenteditable={cont}>{timeValue}</span>
-            for <span data-name="a/an" on:focus={(e)=>{clearText(e)}} on:blur={(e)=>{blurCheck(e);}} class={contSymbol} contenteditable={cont}>
-                {#if !mobileDisplay}
+            demerit points at approximately 
+            <span data-name="time" on:focus={(e)=>{clearText(e)}} class={contSymbol} contenteditable={windowWidth > 856 ? cont : false}>{timeValue}</span>
+            for <span data-name="a/an" on:focus={(e)=>{clearText(e)}} on:blur={(e)=>{blurCheck(e);}} class={contSymbol} contenteditable={windowWidth > 856 ? cont : false}>
+                {#if !mobileDisplay && windowWidth > 856}
                 a/an (infraction)
                 {:else}
                 {outputText["a/an"]}
                 {/if}
             </span>. 
-            <span data-name="who" class={contSymbol} on:focus={(e)=>{clearText(e)}} on:blur={(e)=>{blurCheck(e);}} contenteditable={cont}>
-                {#if !mobileDisplay}
+            <span data-name="who" class={contSymbol} on:focus={(e)=>{clearText(e)}} on:blur={(e)=>{blurCheck(e);}} contenteditable={windowWidth > 856 ? cont : false}>
+                {#if !mobileDisplay && windowWidth > 856}
                 (Who assigned you the demerit, if Capt. Spell out Captain) 
                 {:else}
                 {outputText["who"]}
                 {/if}
             </span> 
             assigned me this demerit report because 
-            <span role="textbox" tabindex="-1" data-name="elipsis" class={contSymbol} contenteditable={cont} on:focus={(e)=>{clearText(e)}} on:blur={(e)=>{blurCheck(e);}} on:keydown={(e)=>{typeCheck(e)}} on:keyup={(e)=>{
+            <span role="textbox" tabindex="-1" data-name="elipsis" class={contSymbol} contenteditable={windowWidth > 856 ? cont : false} on:focus={(e)=>{clearText(e)}} on:blur={(e)=>{blurCheck(e);}} on:keydown={(e)=>{typeCheck(e)}} on:keyup={(e)=>{
                 if(e.keyCode == 8) {
                     checkBackSpace(e.target);
                 }
             }}>
-            {#if !mobileDisplay}
+            {#if !mobileDisplay && windowWidth > 856}
             ...
             {:else}
             {outputText["elipsis"]}
             {/if}
         </span> 
-            <span>{#if cont} {wordCount} / 100 {/if}</span>
+            <span>{#if cont && windowWidth > 856} {wordCount} / 100 {/if}</span>
         </p>
 
         <table class="w-margin h-[125px] absolute bottom-[96px] ml-[96px] border-collapse {!mobileDisplay ? "paper:hidden": ''}">
@@ -225,15 +232,65 @@
                 
                 <h1 class="text-xl font-bold">Editor Area</h1><br>
 
-                <p class="font-bold"> Enter Demerit points here: <span class="font-normal {contSymbol}" contenteditable={cont}>(#)</span></p><br>
+                {#each [["text-lg grow-[2]", "Enter you name here: ", nameValue, "name"], 
+                    ["text-lg grow-[1]", "Enter the date here: ", dateValue, "date"],
+                    ["text-lg grow-[1]", "Enter your Hr # here: ", hrValue, "hr"]] as data, i}
 
-                <p class="font-bold"> Pick your time here: <span class="font-normal {contSymbol}" contenteditable={cont}>(time)</span></p><br>
+                        <div class={data[0]}>
+                            <span class="font-bold">{data[1]}</span>
+                            <span
+                                role="contentinfo"
+                                on:keydown={(e)=>{
+                                    if(i == 2) {
+                                        numberFormat(e);
+                                    }
+                                }} on:keyup={(e)=>{
+                                    keyCombo = false;
+                                }} on:focus={(e)=>{clearText(e)}} on:blur={(e)=>{
+                                    if(i != 1) {blurCheck(e);}}} data-name={data[3]} class="font-normal {contSymbol2} {i == 0 ? "capitalize" : ""}" contenteditable={cont}>
+                                    {data[2]}
+                            </span>
+                        </div><br>
 
-                <p class="font-bold"> Write infraction here: <span class="font-normal {contSymbol}" contenteditable={cont}>(infraction)</span></p><br>
+                    {/each}
 
-                <p class="font-bold"> Write who assigned the infraction here: <span class="font-normal {contSymbol}" contenteditable={cont}>(Who assigned you the demerit, if Capt. Spell out Captain)</span></p><br>
+                <p class="font-bold"> Enter Demerit points here: <span class="font-normal {contSymbol2}" role="contentinfo" data-name="#" on:focus={(e)=>{clearText(e)}} on:blur={(e)=>{blurCheck(e);}} contenteditable={cont} on:keydown={(e)=>{
+                    numberFormat(e);
+                }} on:keyup={(e)=>{
+                    keyCombo = false;
+                }}>
+                {#if !mobileDisplay}
+                (#)
+                {:else}
+                {outputText["#"]}
+                {/if}</span></p><br>
 
-                <p class="font-bold"> Write your reason here: <span class="font-normal {contSymbol}" contenteditable={cont}>(...)</span></p><br>
+                <p class="font-bold"> Pick your time here: <span data-name="time" on:focus={(e)=>{clearText(e)}} class="font-normal {contSymbol2}" contenteditable={cont}>{timeValue}</span></p><br>
+
+                <p class="font-bold"> Write infraction here: <span data-name="a/an" on:focus={(e)=>{clearText(e)}} on:blur={(e)=>{blurCheck(e);}} class="font-normal {contSymbol2}" contenteditable={cont}>
+                    {#if !mobileDisplay}
+                    a/an (infraction)
+                    {:else}
+                    {outputText["a/an"]}
+                    {/if}</span></p><br>
+
+                <p class="font-bold"> Write who assigned the infraction here: <span data-name="who" class="font-normal {contSymbol2}" on:focus={(e)=>{clearText(e)}} on:blur={(e)=>{blurCheck(e);}} contenteditable={cont}>
+                    {#if !mobileDisplay}
+                    (Who assigned you the demerit, if Capt. Spell out Captain) 
+                    {:else}
+                    {outputText["who"]}
+                    {/if}</span></p><br>
+
+                <p class="font-bold"> Write your reason here: <span role="textbox" tabindex="-1" data-name="elipsis" class="font-normal {contSymbol2}" contenteditable={cont} on:focus={(e)=>{clearText(e)}} on:blur={(e)=>{blurCheck(e);}} on:keydown={(e)=>{typeCheck(e)}} on:keyup={(e)=>{
+                    if(e.keyCode == 8) {
+                        checkBackSpace(e.target);
+                    }
+                }}>
+                {#if !mobileDisplay}
+                ...
+                {:else}
+                {outputText["elipsis"]}
+                {/if}</span></p><br>
 
             </div>
         {/if}

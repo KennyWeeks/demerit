@@ -67,7 +67,7 @@
     let lightModeTrigger : string = "right-[2.5px]";
 
     //This is for the page for light and dark mode restrictions
-    let contSymbol : string = "rounded-sm border border-black px-[5px] outline-0";
+    let contSymbol : string = "paper:border-white rounded-sm border border-black px-[5px] outline-0";
     let lightDark = "bg-white text-black-200";
     let finalTime : string;
 
@@ -80,7 +80,7 @@
             lightDark = "bg-white text-black-200";
             color = "black";
             lightModeTrigger = "right-[2.5px]";
-            contSymbol = `rounded-sm border border-black px-[5px] outline-0`;
+            contSymbol = `paper:border-white rounded-sm border border-black px-[5px] outline-0`;
             button = false;
             previewOpen = false;
             previewText = "preview";
@@ -107,9 +107,9 @@
     contSymbol={""}
     outputText={outputText}
     timeValue={finalTime}
-    windowWidth={windowWidth}
     editorVisible={false}
-    bind:page={smallPage}/>
+    bind:page={smallPage}
+    bind:windowWidth={windowWidth}/>
 </div>
 {/if}
 
@@ -134,14 +134,14 @@
                 if(lightModeTrigger == "right-[2.5px]") {
                     lightModeTrigger = "left-[2.5px]";
                     lightDark = "bg-black-200 text-white";
-                    contSymbol = `rounded-sm border border-white px-[5px] outline-0`;
+                    contSymbol = `paper:border-white rounded-sm border border-white px-[5px] outline-0`;
                     color = "white";
                     lightIcon = "light.png";
                     width = 20;
                 } else {
                     lightModeTrigger = "right-[2.5px]";
                     lightDark = "bg-white text-black";
-                    contSymbol = `rounded-sm border border-black px-[5px] outline-0`;
+                    contSymbol = `paper:border-whtie rounded-sm border border-black px-[5px] outline-0`;
                     color = "black";
                     lightIcon = "dark.png"
                     width = 11;
@@ -285,12 +285,13 @@
     contSymbol={state == 0 ? "" : contSymbol} 
     lightDark={lightDark}
     editorVisible={windowWidth <= 856 ? true : false}
+    timeValue={finalTime}
     bind:page={bigPage} 
     bind:dateModal={dateModal} 
     bind:timeStuff={timeStuff} 
-    bind:timeValue={timeValue} 
     bind:dateValue={dateValue} 
     bind:outputText={outputText}
+    bind:windowWidth={windowWidth}
     />
     
 </div>

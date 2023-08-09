@@ -55,6 +55,7 @@
                 }
                 pf.innerText = time;
                 finalTime = time;
+                console.log(finalTime);
             }
         });
     }
