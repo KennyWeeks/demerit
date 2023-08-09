@@ -15,6 +15,8 @@
     export let saveClicked : boolean = false;
     export let fileName : string = ""; //This will be the name of the file
 
+    let clientWidth : any = [];
+
     //THis is the preview function
     const preview = () => {
         if(windowWidth >= 856) {
@@ -89,11 +91,10 @@
         let moveLeft : number = 278;
         let moveLeftSecond : number = 216;
 
+        clientWidth = [...introArea.children];
+
         //Next you type cast the HTMLCollection to an array, and draw boxes that represent the unique size of each box.
         [...introArea.children].forEach((e : any, index: number)=>{
-
-            ctx.rect(startingX, 212, e.clientWidth, 20);
-            ctx.stroke();
 
             ctx.font = "bold 16px Arial";
             ctx.fillStyle = "#000";
@@ -101,6 +102,7 @@
             //Fill the text, and move to the next starting point
             ctx.fillText(e.innerText, startingX, 212 + 20);
             startingX += e.clientWidth;
+            console.log(startingX);
         });
 
         //Create the INFRACTION text here
@@ -237,6 +239,9 @@
             {button}
         {/if}
     </button>
+    {/each}
+    {#each clientWidth as cl}
+    <p>{cl.clientWidth}</p>
     {/each}
 </div>
 {#if !mobileOptions}
