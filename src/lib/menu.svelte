@@ -12,7 +12,7 @@
     export let previewOpen : boolean = false;
     export let mobileOptions : boolean = false;
     export let saveModal : boolean = false;
-    export let saveClicked : boolean = false;
+    export let saveClicked : boolean;
     export let fileName : string = ""; //This will be the name of the file
 
     let clientWidth : any = [];
@@ -100,11 +100,11 @@
             ctx.fillStyle = "#000";
             
             console.log(clientWidth[index].clientWidth);
+            console.log(clientWidth[index].offsetWidth);
 
             //Fill the text, and move to the next starting point
             ctx.fillText(e.innerText, startingX, 212 + 20);
-            startingX += clientWidth[index].clientWidth;
-            console.log(startingX);
+            startingX += clientWidth[index].offsetWidth;
         });
 
         //Create the INFRACTION text here
@@ -167,6 +167,7 @@
         image.onload = ()=>{
             //Since the image is the worst part of this cycle, if dont' include this function here, the Image object will not load, and the final PDF will have everythng but the image
             //This also ensures there are not unwanted paths around the image once it is rendered.
+            console.log("WHAT IS GOING ON")
             ctx.beginPath();
             ctx.fillStyle = "none";
             ctx.strokeStyle = "none";
@@ -178,9 +179,11 @@
 
             //This will print the content as needed
             if(pdf !== null) {
+                console.log("What is going on");
                 pdf.addImage(imgData, "PNG", 0, 0, 816, 1056);
                 fileName += ".pdf";
                 pdf.save(fileName);
+                
             } else {
                 let windowContent = "<!DOCTYPE html><html><head><title>Print Report</title></head><body>";
                 windowContent += "<img src='" + imgData + "'/>";
@@ -212,9 +215,13 @@
     $: {
         //So this one is the 
         if(saveClicked) {
-            let doc = new jsPDF('p', 'px', [816, 1056]);
-            createPDF(doc);
-            saveClicked = false; //Make this false in the end again, so that we don't keep getting asked if we want to downloadthe pdf again.
+            console.log("THE FUCK")
+            setTimeout(()=>{
+                let doc = new jsPDF('p', 'px', [816, 1056]);
+                createPDF(doc);
+                saveClicked = false;
+            }, 100);
+            
         }
         if(!button) {
             mlMenu = "ml-[40%]";

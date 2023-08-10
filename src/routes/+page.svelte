@@ -6,6 +6,7 @@
     import Slip from "$lib/slip.svelte"; //This will hold the content to the page
     import Menu from "$lib/menu.svelte"; //This will actually be the menu modal (it will actually generate the content)
     import { base } from "$app/paths"; 
+    import {createPDF} from "$lib/createPDF.js";
     
     /*-----
     VARIABLES STAYING ON THIS PAGE OR BEING PUSHED TO EVER PAGE
@@ -217,9 +218,22 @@
                     fileDate = "";
                 }
             }}/><br>
-            <button on:click={()=>{
+            <button on:mouseup={()=>{
+                console.log(smallPage);
                 fileName += fileDate;
-                saveClick = true;
+                //THis will be the canvas rendering context
+                const canvas = document.createElement("canvas");
+                canvas.width = 816;
+                canvas.height = 1056;
+                canvas.setAttribute("style", "background-color:#ffffff; margin:auto; outline:none;");
+
+                //This is the context, which is where everything is rendered
+                const ctx = canvas.getContext("2d");
+
+                let doc = new jsPDF('p', 'px', [816, 1056]);
+
+                createPDF(canvas, ctx, smallPage, doc);
+
             }} class="bg-blue-900 text-blue-1000 px-[10px] py-[5px] rounded-md mt-[10px]">Save as PDF</button>
         </div>
     </Modal>
