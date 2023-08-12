@@ -130,3 +130,23 @@ export const createPDF = (canvas, ctx, page, doc) => {
     };
 
 }
+
+export const blackContBorder = "paper:border-none paper:px-[0px] rounded-sm border border-black px-[5px] outline-0";
+export const whiteContBorder = "paper:border-none paper:px-[0px] rounded-sm border border-white px-[5px] outline-0";
+export const contBorderNoPaper = "rounded-sm border border-black px-[5px] outline-0";
+
+
+export const lightDarkFunc = (lightModeTrigger, lightDark, contSymbol, color) => {
+    if(lightModeTrigger == "right-[2.5px]") {
+        lightModeTrigger = "left-[2.5px]";
+        lightDark = "bg-black-200 text-white";
+        contSymbol = whiteContBorder;
+        color = "white";
+    } else {
+        lightModeTrigger = "right-[2.5px]";
+        lightDark = "bg-white text-black";
+        contSymbol = blackContBorder
+        color = "black";
+    }
+    return [lightModeTrigger, lightDark, contSymbol, color];
+}

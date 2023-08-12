@@ -9,6 +9,7 @@
     export let page : HTMLElement | null; //This will hold the page reference, so content can be pulled to make the canvas.
     export let editorVisible : boolean; //This will determine whether the editor will be visible to the user //I want the editor area visible, which should only be on one of the pages
     import {base} from "$app/paths";
+    import {blackContBorder, contBorderNoPaper} from "./createPDF";
 
     //This is the table contents that will be displayed on the table
     let tableContent : Array<Array<string>> = [["", "Recruit Signature", "HR #", "Date"], ["", "Academy Staff Signature", "HR #", "Date"]]; 
@@ -27,8 +28,8 @@
 
     //These are the styles that go around the contendible area
     export let cont : boolean = true; //This will allow the areas to be contentdible or not
-    export let contSymbol : string = `paper:border-white rounded-sm border border-black px-[5px] outline-0` //This will be the border around the contentidble area
-    let contSymbol2 : string = 'rounded-sm border border-black px-[5px] outline-0';
+    export let contSymbol : string = blackContBorder; //This will be the border around the contentidble area
+    let contSymbol2 : string = contBorderNoPaper;
 
     //These are the lighting features
     export let lightDark : string = "bg-white text-black-200"; //This will be the classes for the light and dark mode of the page.
