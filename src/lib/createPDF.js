@@ -124,9 +124,26 @@ export const createPDF = (canvas, ctx, page, doc) => {
         ctx.lineHeight = 0;
         ctx.drawImage(image, 105, 62, 624, 117);
         let imgData = canvas.toDataURL("image.png");
-        doc.addImage(imgData, "PNG", 0, 0, 816, 1056);
-        let fileName = "Bitch.pdf";
-        doc.save(fileName);
+        if(doc == null) {
+            let mywindow = window.open('', 'PRINT', 'height=1056,width=816');
+
+            mywindow.document.write('<html><head><title>Print Page</title>');
+            mywindow.document.write('</head><body >');
+            mywindow.document.write("<img src='" + imgData + "'/>");
+            mywindow.document.write('</body></html>');
+
+            mywindow.document.close(); // necessary for IE >= 10
+            setTimeout(()=>{
+                mywindow.focus(); // necessary for IE >= 10*/
+
+                mywindow.print();
+                mywindow.close();
+            });
+            } else {
+            doc.addImage(imgData, "PNG", 0, 0, 816, 1056);
+            let fileName = "Bitch.pdf";
+            doc.save(fileName);
+        }
     };
 
 }
