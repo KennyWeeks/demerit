@@ -42,6 +42,14 @@
         -----
         Count how many characters are typed in the reason contendible block.
         */
+        if(e.keyCode == 224 || e.keyCode == 17) {
+            //If this is cmd or ctrl, this is true
+            keyCombo = true;
+        }
+        if(keyCombo && (e.keyCode == 86 || e.keyCode == 67 || e.keyCode == 88)) {
+            e.preventDefault();
+        }
+
         if(wordCount != 100) {
             let example : string[] = e.target.innerText.split(/\s+/); //Split the text by 1 to n spaces, so the program won't count 5 spaces as a word
             example = example.filter(word => word != ''); //Filter everything that isn't a space
@@ -415,8 +423,15 @@
                     contenteditable={cont} 
                     on:focus={(e)=>{clearText(e)}} 
                     on:blur={(e)=>{blurCheck(e);}} 
-                    on:keydown={(e)=>{typeCheck(e)}} 
+                    on:keydown={(e)=>{
+                        //This will check for control v
+                        typeCheck(e)
+                    }} 
                     on:keyup={(e)=>{
+                        if(e.keyCode == 224 || e.keyCode == 17) {
+                            //If this is cmd or ctrl, this is true
+                            keyCombo = false;
+                        }
                         if(e.keyCode == 8) {
                             checkBackSpace(e.target);
                         }

@@ -134,7 +134,8 @@ export const createPDF = (canvas, ctx, page, doc) => {
 export const blackContBorder = "paper:border-none paper:px-[0px] rounded-sm border border-black px-[5px] outline-0";
 export const whiteContBorder = "paper:border-none paper:px-[0px] rounded-sm border border-white px-[5px] outline-0";
 export const contBorderNoPaper = "rounded-sm border border-black px-[5px] outline-0";
-
+export const monthObject = {"01": "January", "02": "February", "03": "March", "04": "April", "05": "May", "06": "June",
+"07": "July", "08": "August", "09": "September", "10": "October", "11": "November", "12": "December"};
 
 export const lightDarkFunc = (lightModeTrigger, lightDark, contSymbol, color) => {
     if(lightModeTrigger == "right-[2.5px]") {

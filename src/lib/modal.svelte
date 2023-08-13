@@ -6,11 +6,19 @@
     export let date : string = "";
     export let time : string = "";
     export let finalTime : string = "";
+    export let formatDate : string = "";
+    export let formatDateTime : string = ""
+    import {monthObject} from "./createPDF.js";
     const timeFormat = (time:string, amPm:string) => {
+        console.log(time);
         let timeArray = time.split(" ");
         time = "";
         console.log(timeArray.length);
         for(let i = 0; i < timeArray.length; i++) {
+            if(i == 2) {
+                time += formatDateString(formatDateTime, timeArray[2]);
+                break;
+            }
             time += timeArray[i];
             if(i == 0) {
                 time += " " + amPm;
@@ -23,6 +31,32 @@
         return time;
     };
 
+    const formatDateString = (format: string, dateString : string) => {
+        if(dateString == "date of demerit" || dateString == "(time)") {
+            return dateString;
+        }
+        let mm : string = dateString.split("-")[1];
+        let yyyy : string = dateString.split("-")[0];
+        let dd : string = dateString.split("-")[2];
+        if(format == "#yyyy-mm-dd") {
+            return dateString;
+        } else if(format == "#yyyy.mm.dd") {
+            return yyyy + "." + mm + "." + dd;
+        } else if(format == "#yyyy/mm/dd") {
+            return yyyy + "/" + mm + "/" + dd;
+        } else if(format == "#mm dd, yyyy") {
+            return mm + " " + dd + ", " + yyyy;
+        } else if(format == "yyyy/mm/dd") {
+            return yyyy + "/" + monthObject[mm] + "/" + dd;
+        } else if(format == "yyyy.mm.dd") {
+            return yyyy + "." + monthObject[mm] + "." + dd;
+        } else if(format == "yyyy-mm-dd") {
+            return yyyy + "-" + monthObject[mm] + "-" + dd;
+        } else {
+            return monthObject[mm] + " " + dd + ", " + yyyy;
+        }
+    }
+
     onMount(()=>{
         console.log(previousFocused);
     });
@@ -32,8 +66,11 @@
             console.log(previousFocused);
             let pf = previousFocused as HTMLElement;
             if(date != "" && pf.getAttribute("data-name") == "date") {
-                pf.innerText = date;
                 console.log(date);
+                console.log(date.split("-"));
+                pf.innerText = formatDateString(formatDate, date);
+                console.log(date);
+                date = formatDateString(formatDate, date);
             }
 
             if(time != "" && pf.getAttribute("data-name") == "time") {
@@ -52,7 +89,7 @@
                         time = timeFormat(time, "AM");  
                     }
                 } else {
-                    time = time.split(" ")[2];
+                    time = formatDateString(formatDateTime, time.split(" ")[2]);
                 }
                 pf.innerText = time;
                 finalTime = time;

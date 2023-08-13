@@ -23,6 +23,20 @@
     //This will trigger the light and dark mode
     let lightModeTrigger : string = "right-[2.5px]";
 
+    /*<option value="#yyyy/mm/dd">Year / Month (#) / Day</option>
+                        <option value="#yyyy.mm.dd">Year . Month (#) . Day</option>
+                        <option value="#yyyy-mm-dd">Year - Month (#) - Day</option>
+                        <option value="#mm dd, year">Month (#) Day, Year</option>
+                        <option value="yyyy/mm/dd">Year / Month / Day</option>
+                        <option value="yyyy.mm.dd">Year . Month . Day</option>
+                        <option value="yyyy-mm-dd">Year - Month - Day</option>
+                        <option value="mm dd, year*/
+
+    let dateString : string[] = ["Year / Month (#) / Day", "Year. Month (#) . Day", "Year - Month (#) - Day", "Month (#) Day, Year", "Year / Month / Day", "Year . Month . Day", "Year - Month - Day", "Month Day, Year"]
+    let dateFormatList : string[] = ["#yyyy/mm/dd", "#yyyy.mm.dd", "#yyyy-mm-dd", "#mm dd, yyyy", "yyyy/mm/dd", "yyyy.mm.dd", "yyyy-mm-dd", "mm dd, yyyy"]
+    let dateFormatDate = "#yyyy/mm/dd";
+    let dateFormatTime = "#yyyy/mm/dd";
+
     /*-----
     VARIABLES GOING TO SLIP MODAL
     -----*/
@@ -39,13 +53,13 @@
     let dateModal : boolean; //Bound to dateModal on slip.svelte (this will be triggered when click on either data contendible area)
     let dateValue : string = "date of demerit"; //THis is the default data value
     let timeStuff : boolean; //Bound to timeStuff on slip.svelte (This will trigger the time input, where users can imput the time)
-    let timeValue : string; //pushed to timeValue on slip.svelte (This will hold the total time)
+    let timeValue : string = "(time)"; //pushed to timeValue on slip.svelte (This will hold the total time)
     let totalTime : string; //THis is the total time after it has been editted.
     
     //These variables will be used for the date, and will combine the time and date together.
     let timeDate : string = "";
     let on : string = "";
-    let finalTime : string; //This is bound to modals, and the slip page
+    let finalTime : string = "(time)"; //This is bound to modals, and the slip page
 
     //This will change the color of the dividing line
     let color : string = "black";
@@ -148,23 +162,25 @@
         bind:saveClicked={saveClick}/>
 
         <!--This will flip between light and dark mode for the mobile platform-->
-        <div class="rounded-3xl bg-blue-900 text-white">
-            <div 
-            role="menuitem" 
-            tabindex="-2" 
-            on:click={()=>{
-                //This will return and unpack all the variables
-                [lightModeTrigger, lightDark, contSymbol, color] = lightDarkFunc(lightModeTrigger, lightDark, contSymbol, color);
-            }} 
-            on:keydown={()=>{}} 
-            class="rounded-3xl bg-blue-900 w-[60px] h-[30px] float-right overflow-hidden relative">
-                <!--This is the light icon-->
-                <div class="w-[25px] h-[25px] bg-blue-1000 rounded-3xl absolute top-[2.5px] {lightModeTrigger}">
-                    <!--Light and Dark Icon-->
-                    <img src="{base}/sun.png" class="mx-[auto] mt-[2.5px]" width="20" alt="light-dark-icon"/>
+        {#if !previewOpen}
+            <div class="rounded-3xl bg-blue-900 text-white">
+                <div 
+                role="menuitem" 
+                tabindex="-2" 
+                on:click={()=>{
+                    //This will return and unpack all the variables
+                    [lightModeTrigger, lightDark, contSymbol, color] = lightDarkFunc(lightModeTrigger, lightDark, contSymbol, color);
+                }} 
+                on:keydown={()=>{}} 
+                class="rounded-3xl bg-blue-900 w-[60px] h-[30px] float-right overflow-hidden relative">
+                    <!--This is the light icon-->
+                    <div class="w-[25px] h-[25px] bg-blue-1000 rounded-3xl absolute top-[2.5px] {lightModeTrigger}">
+                        <!--Light and Dark Icon-->
+                        <img src="{base}/sun.png" class="mx-[auto] mt-[2.5px]" width="20" alt="light-dark-icon"/>
+                    </div>
                 </div>
             </div>
-        </div>
+        {/if}
 
     </Modal>
     {/if}
@@ -173,7 +189,7 @@
 {#if dateModal}
     <div class="absolute w-[100vw] h-[100vh] bg-black-100 z-40 flex jusity-content items-center">
 
-        <Modal classData="inline-block mx-auto overflow-visible" bind:finalTime={finalTime} bind:date={dateValue} bind:time={totalTime}>
+        <Modal classData="inline-block mx-auto overflow-visible" bind:finalTime={finalTime} bind:date={dateValue} bind:time={totalTime} formatDate={dateFormatDate} formatDateTime={dateFormatTime}>
             <div class="p-[20px] bg-blue-1000 rounded-md relative">
 
                 <div class="p-[7.5px] rounded-3xl bg-white absolute top-[-35px] right-0" role="button" tabindex="-3" on:keypress={()=>{}} on:click={()=>{
@@ -196,16 +212,11 @@
 
                     <p>----------------</p>
 
-                    <label for="format" class="mt-[5px]">Pick a date format (If the Month has the # after, that means the numeric month)</label>
-                    <select name="format" value="#yyyy/mm/dd">
-                        <option value="#yyyy/mm/dd">Year / Month (#) / Day</option>
-                        <option value="#yyyy.mm.dd">Year . Month (#) . Day</option>
-                        <option value="#yyyy-mm-dd">Year - Month (#) - Day</option>
-                        <option value="#mm dd, year">Month (#) Day, Year</option>
-                        <option value="yyyy/mm/dd">Year / Month / Day</option>
-                        <option value="yyyy.mm.dd">Year . Month . Day</option>
-                        <option value="yyyy-mm-dd">Year - Month - Day</option>
-                        <option value="mm dd, year">Month Day, Year</option>
+                    <label for="format" class="mt-[5px] w-[200px]">Pick a date format (If the Month has the # <br> after, that means the numeric month)</label><br>
+                    <select name="format" bind:value={dateFormatTime}>
+                        {#each dateFormatList as dfl, i}
+                            <option value="{dfl}">{dateString[i]}</option>
+                        {/each}
                     </select>
                 {:else}
                     <label for="date">Pick a date: </label>
@@ -213,16 +224,11 @@
 
                     <p>----------------</p>
 
-                    <label for="format">Pick a date format (If the Month has the # after, that means the numeric month)</label>
-                    <select name="format" value="#yyyy/mm/dd">
-                        <option value="#yyyy/mm/dd">Year / Month (#) / Day</option>
-                        <option value="#yyyy.mm.dd">Year . Month (#) . Day</option>
-                        <option value="#yyyy-mm-dd">Year - Month (#) - Day</option>
-                        <option value="#mm dd, year">Month (#) Day, Year</option>
-                        <option value="yyyy/mm/dd">Year / Month / Day</option>
-                        <option value="yyyy.mm.dd">Year . Month . Day</option>
-                        <option value="yyyy-mm-dd">Year - Month - Day</option>
-                        <option value="mm dd, year">Month Day, Year</option>
+                    <label for="format" class="mt-[5px] w-[200px]">Pick a date format (If the Month has the # <br> after, that means the numeric month)</label><br>
+                    <select name="format" bind:value={dateFormatDate}>
+                        {#each dateFormatList as dfl, i}
+                            <option value="{dfl}">{dateString[i]}</option>
+                        {/each}
                     </select>
                 {/if}
 

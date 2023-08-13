@@ -212,6 +212,8 @@
         createPDF(null);
     }
 
+    let displayType : string = "block";
+
     $: {
         //So this one is the 
         if(saveClicked) {
@@ -226,8 +228,12 @@
         if(!button) {
             mlMenu = "ml-[40%]";
         }
+        if(windowWidth > 500) {
+            displayType = "inline-block";
+        } else {
+            displayType = "block";
+        }
     }
-
 </script>
 
 <div class="float-right clear-left inline-block {mobileOptions ? "" : "menu:hidden"}">
@@ -241,7 +247,7 @@
             print();
         }
     }
-    } class="px-4 {i == 0 && !mobileOptions ? 'mr-1' : ""} {i == 3 && !mobileOptions ? "ml-1" : ""} {i != 0 && i != 3 && !mobileOptions ? 'mx-1' : ""} {mobileOptions ? "w-[100%] mb-[5px]" : ""} py-1 rounded-3xl {mobileOptions ? "block text-blue-1000 bg-blue-900" : "text-blue-900 hover:bg-blue-900 hover:text-blue-1000 "}">
+    } class="px-4 {(i == 1 && mobileOptions && !previewOpen) ? "hidden": displayType} {(i == 2 && mobileOptions && !previewOpen) ? "hidden": "block"} {i == 0 && !mobileOptions ? 'mr-1' : ""} {i == 3 && !mobileOptions ? "ml-1" : ""} {i != 0 && i != 3 && !mobileOptions ? 'mx-1' : ""} {mobileOptions ? "w-[100%] mb-[5px]" : ""} py-1 rounded-3xl {mobileOptions ? "block text-blue-1000 bg-blue-900" : "text-blue-900 hover:bg-blue-900 hover:text-blue-1000 "}">
         {#if i == 0}
             {previewText}
         {:else}
