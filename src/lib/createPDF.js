@@ -137,7 +137,6 @@ export const createPDF = (canvas, ctx, page, doc) => {
                 mywindow.focus(); // necessary for IE >= 10*/
 
                 mywindow.print();
-                mywindow.close();
             });
             } else {
             doc.addImage(imgData, "PNG", 0, 0, 816, 1056);
